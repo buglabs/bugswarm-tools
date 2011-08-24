@@ -16,7 +16,6 @@ def list_swarms(api_key):
     conn.request("GET", "/swarms", None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse();
     txt = resp.read()
-    print txt
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
