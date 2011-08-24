@@ -37,9 +37,9 @@ def init(username, password):
 
 
 def main():
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 1 and sys.argv[0] == "init.py":
         usage(sys.argv[0])
-    if sys.argv[1] == "init":
+    elif sys.argv[0] == "init.py" and sys.argv[1] == "init":
         init(sys.argv[2], sys.argv[3])
 
 main()
