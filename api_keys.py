@@ -6,7 +6,7 @@ import json
 import base64
 
 def usage(name):
-    print "%s [list]"%(name)
+    print "%s [list <username> <password>]"%(name)
     sys.exit()
 
 def list_keys(username, password):
