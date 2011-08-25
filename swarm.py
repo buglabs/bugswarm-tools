@@ -17,7 +17,6 @@ def usage_destroy(name):
     sys.exit()
 
 def create_swarm(api_key, name, description, public):
-    # conn = httplib.HTTPConnection('localhost', 8089)
     conn = httplib.HTTPConnection('api.bugswarm.net')
     new_swarm_json = json.dumps({'name': name, 
                                  'description': description, 
