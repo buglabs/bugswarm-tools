@@ -12,8 +12,14 @@ def usage(name):
 
 def init(username, password):
     config = ConfigParser.ConfigParser()
-    config.add_section("Settings")
 
+    add_keys(username, password, config)
+    
+    with open("swarm.cfg", "wb") as configfile:
+        config.write(configfile)
+
+def add_keys(username, password, config):
+    config.add_section("Keys")
     conn = httplib.HTTPConnection('api.bugswarm.net')
     auth_hash = username + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
@@ -25,16 +31,13 @@ def init(username, password):
     for key_obj in json_obj:
         key_type = key_obj["type"]
         key_value = key_obj["key"]
-        config.set("Settings", key_type, key_value)
-    if config.has_option("Settings", "master") == False:
-        config.set("Settings", "master", "none")
-    if config.has_option("Settings", "consumer") == False:
-        config.set("Settings", "consumer", "none")
-    if config.has_option("Settings", "producer") == False:
-        config.set("Settings", "producer", "none")
-    with open("swarm.cfg", "wb") as configfile:
-        config.write(configfile)    
-
+        config.set("Keys", key_type, key_value)
+    if config.has_option("Keys", "master") == False:
+        config.set("Keys", "master", "none")
+    if config.has_option("Keys", "consumer") == False:
+        config.set("Keys", "consumer", "none")
+    if config.has_option("Keys", "producer") == False:
+        config.set("Keys", "producer", "none")
 
 def main():
     if len(sys.argv) == 1 and sys.argv[0] == "init.py":

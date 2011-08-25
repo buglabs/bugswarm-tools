@@ -14,7 +14,7 @@ def create_swarm():
 def list_swarms(api_key):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("GET", "/swarms", None, {"x-bugswarmapikey":api_key})
-    resp = conn.getresponse();
+    resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
