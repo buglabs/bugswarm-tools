@@ -32,10 +32,14 @@ def get_resource(api_key, resource_id):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def add(api_key, swarm_id, ):
-    json = open(filename)
+def add(api_key, swarm_id, resource_type, user_id, resource_id):
+    json = {"type":resource_type, "user_id":user_id, "id":resource_id}
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    conn.request("POST", "/swarms/%s/resources"%(swarm_id), json, {"x=bugswarmapikey":api_key} {"content-type":application/json})
+    conn.request("POST", "/swarms/%s/resources"%(swarm_id), json, [{"x=bugswarmapikey":api_key}, {"content-type":"application/json"}])
+    resp = conn.getresponse()
+    txt = resp.read()
+    conn.close()
+    print txt
 
 def main():
     keys = swarmtoolscore.get_keys()
@@ -46,6 +50,8 @@ def main():
     if sys.argv[1] == "list_user":
         list_user_resources(keys["master"])
     if sys.argv[1] == "get":
-        get_resource(keys["master"], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+        get_resource(keys["master"], sys.argv[2])
+    if sys.argv[1] == "add":
+        add(keys["master"], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
 main()
