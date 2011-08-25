@@ -12,6 +12,10 @@ def usage_create(name):
     print "%s create NAME DESCRIPTION [--public]"%(name)
     sys.exit()
 
+def usage_update(name):
+    print "%s update SWARM_ID [DESCRIPTION] [--public|--private]"%(name)
+    sys.exit()
+
 def usage_destroy(name):
     print "%s destroy SWARM_ID"%(name)
     sys.exit()
