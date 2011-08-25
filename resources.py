@@ -5,7 +5,7 @@ import httplib
 import json
 
 def usage(name):
-    print "%s [list_swarm <Swarm id>|list_user|get <Resource id>|add <Swarm id> <type> <User id> <Resource id>|remove <Swarm id> <type> <User id> <Resource id>]"%s(name)
+    print "%s [list_swarm <Swarm id>|list_user|get <Resource id>|add <Swarm id> <type> <User id> <Resource id>|remove <Swarm id> <type> <User id> <Resource id>]"%(name)
     sys.exit()
 
 def list_swarm_resources(api_key, swarm_id):
