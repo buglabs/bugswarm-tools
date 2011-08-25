@@ -21,7 +21,6 @@ def create_swarm(api_key, name, description, public):
     new_swarm_json = json.dumps({'name': name, 
                                  'description': description, 
                                  'public': public})
-    print "new_swarm_json", new_swarm_json
     conn.request("POST", "/swarms", new_swarm_json, {"x-bugswarmapikey": api_key, "content-type": "application/json"})
     resp = conn.getresponse()
     txt = resp.read()
