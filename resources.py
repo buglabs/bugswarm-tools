@@ -5,7 +5,7 @@ import httplib
 import json
 
 def usage(name):
-    print "%s [list_swarm <Swarm id>|list_user|get <Resource id>]"%s(name)
+    print "%s [list_swarm <Swarm id>|list_user|get <Resource id>|add <Swarm id> <type> <User id> <Resource id>|remove <Swarm id> <type> <User id> <Resource id>]"%s(name)
     sys.exit()
 
 def list_swarm_resources(api_key, swarm_id):
@@ -33,9 +33,18 @@ def get_resource(api_key, resource_id):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def add(api_key, swarm_id, resource_type, user_id, resource_id):
-    json = {"type":resource_type, "user_id":user_id, "id":resource_id}
+    new_resource_json = json.dumps({"type": resource_type, "user_id": user_id, "resource": resource_id})
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    conn.request("POST", "/swarms/%s/resources"%(swarm_id), json, [{"x=bugswarmapikey":api_key}, {"content-type":"application/json"}])
+    conn.request("POST", "/swarms/%s/resources"%(swarm_id), new_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    resp = conn.getresponse()
+    txt = resp.read()
+    conn.close()
+    print txt
+
+def remove(api_key, swarm_id, resource_type, user_id, resource_id):
+    remove_resource_json = json.dumps({"type": resource_type, "user_id": user_id, "id": resource_id})
+    conn = httplib.HTTPConnection('api.bugswarm.net')
+    conn.request("DELETE", "/swarms/%s/resources"%(swarm_id), remove_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -53,5 +62,7 @@ def main():
         get_resource(keys["master"], sys.argv[2])
     if sys.argv[1] == "add":
         add(keys["master"], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    if sys.argv[1] == "remove":
+        remove(keys["master"], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
 main()
