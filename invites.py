@@ -5,7 +5,7 @@ import httplib
 import json
 
 def usage(name):
-    print "%s [invites]"%(name)
+    print "%s [list]"%(name)
     sys.exit()
 
 def list_invites(api_key):
