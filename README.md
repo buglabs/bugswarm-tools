@@ -1,4 +1,4 @@
-## BUGswarm Tools README
+## BUGswarm Tools
 Welcome to BUGswarm-Tools, a simple set of python scripts that allows users to access all the juicy information regarding their BUGswarm account without the need to use excessively long and frustrating 'curl' commands.
 
 INSTALLATION:
