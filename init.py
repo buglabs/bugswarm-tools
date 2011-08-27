@@ -26,6 +26,7 @@ def add_keys(username, password, config):
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
     txt = resp.read()
+    print txt
     conn.close()
     json_obj = json.loads(txt)
     for key_obj in json_obj:
