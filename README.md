@@ -15,6 +15,7 @@ This script will generate a file called "swarm.cfg" within the package that will
 
 For each of the BUGswarm Tools scripts, simply run 'python <script name>' without any arguments to see what functions are available to you for that given script.
 
+
 **Note that the swarmtoolscore.py script does not contain any standalone functions. This file simply contains helper methods for the other scripts.  Once you know what function in a given script you would like to call, simply call 'python <script name> <function name>' followed by any parameters the function may require.
 
 For example, to list all of the Swarms belonging to your user account, simply call:
