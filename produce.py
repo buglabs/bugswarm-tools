@@ -16,7 +16,6 @@ def produce(api_key, swarm_id, resource_name, feed_name):
     print api_key
     conn.putrequest("PUT", sel)
     conn.putheader("X-BugSwarmApiKey", api_key)
-    conn.putheader("Connection", "close")
     conn.putheader("Transfer-Encoding", "chunked")
     conn.endheaders()
 
