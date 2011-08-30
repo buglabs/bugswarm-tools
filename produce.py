@@ -11,6 +11,7 @@ def usage(name):
 
 def produce(api_key, swarm_id, resource_name, feed_name):
     conn = httplib.HTTPConnection('api.bugswarm.net')
+    #conn = httplib.HTTPConnection('127.0.0.1')
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_name, feed_name, swarm_id)
     print sel
     print api_key
@@ -19,7 +20,10 @@ def produce(api_key, swarm_id, resource_name, feed_name):
     conn.putheader("Transfer-Encoding", "chunked")
     conn.endheaders()
 
-    time.sleep(1)
+    #time.sleep(1)
+    #conn.send("1\r\n")
+    #conn.send("1\r\n")
+    #time.sleep(1)
     try:
         for msg in sys.stdin.readlines():
             stripped_msg = msg.strip()
