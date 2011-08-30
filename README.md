@@ -6,6 +6,14 @@ In order to install BUGswarm Tools, simply clone this repository from github usi
 
     git clone git@github.com:buglabs/bugswarm-tools.git
 
+If you are running zsh, you may want to add the following function to your .zshrc:
+
+    function swarm() {
+      python $HOME/code/buglabs/bugswarm-tools/$1.py $*[2,$#-1]
+    }
+
+This lets you run commands like `swarm resources list_user` from anywhere, instead of `python /path/to/resources.py list_user`
+
 USAGE:
 Before using any of the python scripts contained within BUGswarm Tools, you must run the following command, using your personal BUGswarm username and password:
 
