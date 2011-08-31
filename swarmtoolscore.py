@@ -15,11 +15,8 @@ def get_keys():
     producer = config.get("Keys", "producer")
     return {"master" : master, "consumer": consumer, "producer": producer}
 
-#functionality currently not supported
-def get_swarms():
-    swarms = {}
+def get_user_info():
     config = ConfigParser.ConfigParser()
     raw_data = config.read("%s/swarm.cfg"%(my_working_directory))
-    for swarm in config.options("Swarms"):
-        swarms[swarm] = config.get("Swarms", swarm)
-    return swarms
+    user_id = config.get("User Information", "user_id")
+    return {"user_id": user_id}

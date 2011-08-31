@@ -7,7 +7,7 @@ import base64
 import init
 
 def usage(name):
-    print "%s [generate <username> <password> <key type>|list <username> <password>|verify <key type>]"%(name)
+    print "%s [generate <password> <key type>|list <password>|verify <key type>]"%(name)
     sys.exit()
 
 def generate(username, password, key_type):
@@ -41,12 +41,13 @@ def verify(key_type):
     print txt
 
 def main():
+    user_info = swarmtoolscore.get_user_info()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     if sys.argv[1] == "generate":
-        generate(sys.argv[2], sys.argv[3], sys.argv[4])
+        generate(user_info["user_id"], sys.argv[2], sys.argv[3])
     if sys.argv[1] == "list":
-        list_keys(sys.argv[2], sys.argv[3])
+        list_keys(user_info["user_id"], sys.argv[2])
     if sys.argv[1] == "verify":
         verify(sys.argv[2])
 
