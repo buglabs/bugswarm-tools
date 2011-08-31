@@ -3,6 +3,7 @@ import sys
 import httplib
 import os
 import time
+import signal
 
 def usage(name):
     print "%s SWARM_ID RESOURCE_NAME FEED_NAME"%(name)
@@ -24,19 +25,31 @@ def produce(api_key, swarm_id, resource_name, feed_name):
     #TODO - actually wait until header is returned
     time.sleep(0.25)
 
-    try:
-        for msg in sys.stdin.readlines():
+    while True:
+        try:
+            msg = sys.stdin.readline()
+            if (len(msg) < 1):
+                break
             stripped_msg = msg.strip()
             size = hex(len(stripped_msg))[2:] + "\r\n"
             chunk = stripped_msg + "\r\n"
             conn.send(size+chunk)
             #conn.send flushes the pipe, so we need both the size and chunk to go out at the same time...
-            
-    except Exception as e:
-        print "some sort of problem", e
+                
+        except Exception as e:
+            print "some sort of problem", e
+        except KeyboardInterrupt as k:
+            print " Closing connection"
+            break
 
     conn.send("0\r\n")
     conn.close()
+
+def signal_handler(signal, frame):
+    print 'Signal recieved, closing connection'
+    conn.send("0\r\n")
+    conn.close()
+    sys.exit(0)
 
 def main():
     keys = swarmtoolscore.get_keys()
