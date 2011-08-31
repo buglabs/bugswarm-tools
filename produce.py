@@ -10,9 +10,16 @@ def usage(name):
     print "Message are read from stdin, each message is one line long, messages are separated by newline characters"
     sys.exit()
 
+def signal_handler(signal, frame):
+        global conn
+        conn.close()
+        print 'Http connection closed.'
+        sys.exit(0)
+
+
 def produce(api_key, swarm_id, resource_name, feed_name):
+    global conn 
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    #conn = httplib.HTTPConnection('127.0.0.1')
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_name, feed_name, swarm_id)
     print sel
     print api_key
@@ -38,18 +45,9 @@ def produce(api_key, swarm_id, resource_name, feed_name):
                 
         except Exception as e:
             print "some sort of problem", e
-        except KeyboardInterrupt as k:
-            print " Closing connection"
-            break
 
     conn.send("0\r\n")
     conn.close()
-
-def signal_handler(signal, frame):
-    print 'Signal recieved, closing connection'
-    conn.send("0\r\n")
-    conn.close()
-    sys.exit(0)
 
 def main():
     keys = swarmtoolscore.get_keys()
@@ -58,6 +56,9 @@ def main():
     swarm_id = sys.argv[1]
     resource_name = sys.argv[2]
     feed_name = sys.argv[3]
+
+    signal.signal(signal.SIGINT, signal_handler)
+
     produce(keys["producer"], swarm_id, resource_name, feed_name)
 
 main()
