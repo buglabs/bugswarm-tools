@@ -20,17 +20,17 @@ def produce(api_key, swarm_id, resource_name, feed_name):
     conn.putheader("Transfer-Encoding", "chunked")
     conn.endheaders()
 
-    #time.sleep(1)
-    #conn.send("1\r\n")
-    #conn.send("1\r\n")
-    #time.sleep(1)
+    #Sleep required to allow the swarm server time to respond with header
+    #TODO - actually wait until header is returned
+    time.sleep(0.25)
+
     try:
         for msg in sys.stdin.readlines():
             stripped_msg = msg.strip()
             size = hex(len(stripped_msg))[2:] + "\r\n"
             chunk = stripped_msg + "\r\n"
-            conn.send(size)
-            conn.send(chunk)
+            conn.send(size+chunk)
+            #conn.send flushes the pipe, so we need both the size and chunk to go out at the same time...
             
     except Exception as e:
         print "some sort of problem", e
