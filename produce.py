@@ -4,9 +4,6 @@ import httplib
 import os
 import time
 import signal
-import readline
-
-conn = None
 
 def usage(name):
     print "%s SWARM_ID RESOURCE_NAME FEED_NAME"%(name)
@@ -16,7 +13,6 @@ def usage(name):
 def signal_handler(signal, frame):
         global conn
         conn.close()
-
         print 'Http connection closed.'
         sys.exit(0)
 
@@ -24,7 +20,6 @@ def signal_handler(signal, frame):
 def produce(api_key, swarm_id, resource_name, feed_name):
     global conn 
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    #conn = httplib.HTTPConnection('127.0.0.1')
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_name, feed_name, swarm_id)
     print sel
     print api_key
@@ -33,24 +28,26 @@ def produce(api_key, swarm_id, resource_name, feed_name):
     conn.putheader("Transfer-Encoding", "chunked")
     conn.endheaders()
 
-    #time.sleep(1)
-    #conn.send("1\r\n")
-    #conn.send("1\r\n")
-    #time.sleep(1)
-    try:
-        while 1: 
-            msg = raw_input()
-            #print "msg: %s"%(msg)
+    #Sleep required to allow the swarm server time to respond with header
+    #TODO - actually wait until header is returned
+    time.sleep(0.25)
+
+    while True:
+        try:
+            msg = sys.stdin.readline()
+            if (len(msg) < 1):
+                break
             stripped_msg = msg.strip()
-            size = hex(len(stripped_msg))[2:]
-            chunk = size + "\r\n" + stripped_msg + "\r\n"
-            #print "chunk: %s"%(chunk)
-            #conn.send(size)
-            conn.send(chunk)
-    except Exception as e:
-        print "some sort of problem", e
-    finally:
-        conn.close()
+            size = hex(len(stripped_msg))[2:] + "\r\n"
+            chunk = stripped_msg + "\r\n"
+            conn.send(size+chunk)
+            #conn.send flushes the pipe, so we need both the size and chunk to go out at the same time...
+                
+        except Exception as e:
+            print "some sort of problem", e
+
+    conn.send("0\r\n")
+    conn.close()
 
 def main():
     keys = swarmtoolscore.get_keys()
