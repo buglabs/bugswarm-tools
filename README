@@ -1,0 +1,30 @@
+<<--BUGswarm Tools-->>
+Welcome to BUGswarm-Tools, a simple set of python scripts ustilizing http requests that allows developers to access all the information needed during BUGswarm development. The goal of this project is to eliminate the use of bulky curl commands when developing in addition to making the httprequest responses more readable.
+
+INSTALLATION:
+In order to install BUGswarm Tools, simply clone this repository from github using the following command:
+
+    git clone git@github.com:buglabs/bugswarm-tools.git
+
+If you are running zsh, you may want to add the following function to your .zshrc:
+
+    function swarm() {
+      python $HOME/code/buglabs/bugswarm-tools/$1.py $*[2,$#-1]
+    }
+
+This lets you run commands like `swarm user_resources create` from anywhere, instead of `python /path/to/user_resources.py create`
+
+USAGE:
+Before using any of the python scripts contained within BUGswarm Tools, you must run the following command, using your personal BUGswarm username and password:
+
+    python init.py init <username> <password>
+
+This script will generate a file called "swarm.cfg" within the package that will contain your API keys and any other useful information that BUGswarm Tools will call upon during development.
+
+For each of the BUGswarm Tools scripts, simply run 'python <script name>' without any arguments to view usage of the script. This will provide you with a list of the different methods you can use with the given script.  Running 'python <script_name> <method> --help' will provide you with information on using a given method.
+
+
+**Note that the swarmtoolscore.py script does not contain any standalone functions. This file simply contains helper methods for the other scripts.  Once you know what function in a given script you would like to call, simply call 'python <script name> <function name>' followed by any arguments and/or options the function may require.
+
+INTERNAL:
+If you would like to make changes to this project or have any questions, comments, or concerns, please submit them as issues in the github repository.  Thank you and happy BUGswarm developing!
