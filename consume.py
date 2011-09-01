@@ -27,10 +27,11 @@ def main():
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    if sys.argv[1] == "consume":
+    elif sys.argv[1] == "consume":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         consume(keys["consumer"], args)
-
+    else:
+        usage(sys.argv[0])
 main()

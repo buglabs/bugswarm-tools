@@ -103,14 +103,14 @@ def main():
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    if sys.argv[1] == "create":
+    elif sys.argv[1] == "create":
         opt_usage = "usage: %s <resource_id> <name> <machine_type> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
         parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="{\"longitude\":<value>, \"latitude\":<value>}")
         (options, args) = parser.parse_args()
         create(keys["master"], options, args)
-    if sys.argv[1] == "update":
+    elif sys.argv[1] == "update":
         opt_usage = "usage: %s <resource_id> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-n", "--name", dest="name", help="Set the Resource's name", metavar="<name>")
@@ -119,25 +119,26 @@ def main():
         parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="{\"longitude\":<value>, \"latitude\":<value>}")
         (options, args) = parser.parse_args()
         update(keys["master"], options, args)
-    if sys.argv[1] == "destroy":
+    elif sys.argv[1] == "destroy":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         destroy(keys["master"], args)
-    if sys.argv[1] == "list_user_resources":
+    elif sys.argv[1] == "list_user_resources":
         opt_usage = "usage: %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         list_user_resources(keys["master"], args)
-    if sys.argv[1] == "get_resource_info":
+    elif sys.argv[1] == "get_resource_info":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         get_resource_info(keys["master"], args)
-    if sys.argv[1] == "list_swarms_with_resource":
+    elif sys.argv[1] == "list_swarms_with_resource":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         list_swarms_with_resource(keys["master"], args)
-
+    else:
+        usage(sys.argv[0])
 main()

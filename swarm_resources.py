@@ -69,21 +69,22 @@ def main():
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    if sys.argv[1] == "add":
+    elif sys.argv[1] == "add":
         opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         add(keys["master"], args)
-    if sys.argv[1] == "remove":
+    elif sys.argv[1] == "remove":
         opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         remove(keys["master"], args)
-    if sys.argv[1] == "list_swarm_resources":
+    elif sys.argv[1] == "list_swarm_resources":
         opt_usage = "usage: %s <swarm_id> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-t", "--type", dest="type", help="Limit the list to only producers or only consumers", metavar="<type>")
         (options, args) = parser.parse_args()
         list_swarm_resources(keys["master"], options, args)
-
+    else:
+        usage(sys.argv[0])
 main()
