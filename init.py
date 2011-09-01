@@ -1,8 +1,8 @@
 #!/usr/bin/python
 from optparse import OptionParser
+import swarmtoolscore
 import ConfigParser
 import sys
-import httplib
 import json
 import base64
 
@@ -17,36 +17,10 @@ def init(args):
         sys.exit()
     user_id = args[1]
     password = args[2]
-    config = ConfigParser.ConfigParser()
-    config.add_section("User Information")
-    config.set("User Information", "user_id", user_id)
-
-    add_keys(user_id, password, config)
-    
-    with open("swarm.cfg", "wb") as configfile:
-        config.write(configfile)
-
-def add_keys(user_id, password, config):
-    config.add_section("Keys")
-    conn = httplib.HTTPConnection('api.bugswarm.net')
-    auth_hash = user_id + ":" + password
-    auth_header = "Basic " + base64.b64encode(auth_hash)
-    conn.request("GET", "/keys", None, {"Authorization":auth_header})
-    resp = conn.getresponse()
-    txt = resp.read()
-    conn.close()
-    json_obj = json.loads(txt)
-    for key_obj in json_obj:
-        key_type = key_obj["type"]
-        key_value = key_obj["key"]
-        config.set("Keys", key_type, key_value)
-    if config.has_option("Keys", "master") == False:
-        config.set("Keys", "master", "none")
-    if config.has_option("Keys", "consumer") == False:
-        config.set("Keys", "consumer", "none")
-    if config.has_option("Keys", "producer") == False:
-        config.set("Keys", "producer", "none")
-
+  
+    swarmtoolscore.set_user_info(user_id)
+    swarmtoolscore.set_keys(user_id, password)
+ 
 def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
