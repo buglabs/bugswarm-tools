@@ -32,7 +32,7 @@ def produce(api_key, args):
     print api_key
     conn.putrequest("PUT", sel)
     conn.putheader("x-bugswarmapikey", api_key)
-    conn.putheader("Transfer-Encoding", "chunked")
+    conn.putheader("transfer-encoding", "chunked")
     conn.endheaders()
 
     #Sleep required to allow the swarm server time to respond with header
