@@ -1,29 +1,35 @@
 #!/usr/bin/python
+from optparse import OptionParser
 import ConfigParser
 import sys
 import httplib
 import json
 import base64
 
-
-def usage(name):
-    print "%s [init <username> <password>]"%(name)
+def usage(script_name):
+    print "%s [init] \n"%(script_name)
+    print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
 
-def init(username, password):
+def init(args):
+    if len(args) != 3:
+        print "Invalid number of args. See --help for correct usage."
+        sys.exit()
+    user_id = args[1]
+    password = args[2]
     config = ConfigParser.ConfigParser()
     config.add_section("User Information")
-    config.set("User Information", "user_id", username)
+    config.set("User Information", "user_id", user_id)
 
-    add_keys(username, password, config)
+    add_keys(user_id, password, config)
     
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
 
-def add_keys(username, password, config):
+def add_keys(user_id, password, config):
     config.add_section("Keys")
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    auth_hash = username + ":" + password
+    auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
@@ -42,9 +48,12 @@ def add_keys(username, password, config):
         config.set("Keys", "producer", "none")
 
 def main():
-    if len(sys.argv) == 1 and sys.argv[0] == "init.py":
+    if len(sys.argv) == 1:
         usage(sys.argv[0])
-    elif sys.argv[0] == "init.py" and sys.argv[1] == "init":
-        init(sys.argv[2], sys.argv[3])
+    if sys.argv[1] == "init":
+        opt_usage = "usage: %s <user_id> <password>"%(sys.argv[1])
+        parser = OptionParser(usage = opt_usage)
+        (options, args) = parser.parse_args()
+        init(args)
 
 main()
