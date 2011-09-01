@@ -1,3 +1,5 @@
+#!/usr/bin/python
+from optparse import OptionParser
 import swarmtoolscore
 import sys
 import httplib
@@ -5,9 +7,9 @@ import os
 import time
 import signal
 
-def usage(name):
-    print "%s SWARM_ID RESOURCE_NAME FEED_NAME"%(name)
-    print "Message are read from stdin, each message is one line long, messages are separated by newline characters"
+def usage(script_name):
+    print "%s [produce] \n"%(script_name)
+    print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
 
 def signal_handler(signal, frame):
@@ -16,21 +18,26 @@ def signal_handler(signal, frame):
         print 'Http connection closed.'
         sys.exit(0)
 
-
-def produce(api_key, swarm_id, resource_name, feed_name):
+def produce(api_key, args):
+    if len(args) != 4:
+        print "Invalid number of args. See --help for correct usage."
+        sys.exit()
+    swarm_id = args[1]
+    resource_id = args[2]
+    feed_name = args[3]
     global conn 
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_name, feed_name, swarm_id)
+    sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_id, feed_name, swarm_id)
     print sel
     print api_key
     conn.putrequest("PUT", sel)
-    conn.putheader("X-BugSwarmApiKey", api_key)
+    conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("Transfer-Encoding", "chunked")
     conn.endheaders()
 
     #Sleep required to allow the swarm server time to respond with header
     #TODO - actually wait until header is returned
-    time.sleep(0.25)
+    time.sleep(1)
 
     while True:
         try:
@@ -51,14 +58,13 @@ def produce(api_key, swarm_id, resource_name, feed_name):
 
 def main():
     keys = swarmtoolscore.get_keys()
-    if len(sys.argv) != 4:
+    if len(sys.argv) == 1:
         usage(sys.argv[0])
-    swarm_id = sys.argv[1]
-    resource_name = sys.argv[2]
-    feed_name = sys.argv[3]
-
     signal.signal(signal.SIGINT, signal_handler)
-
-    produce(keys["producer"], swarm_id, resource_name, feed_name)
+    if sys.argv[1] == "produce":
+        opt_usage = "usage: <data> | python %s <swarm_id> <resource_id> <feed_name>"%(sys.argv[1])
+        parser = OptionParser(usage = opt_usage)
+        (options, args) = parser.parse_args()
+        produce(keys["producer"], args)
 
 main()
