@@ -17,7 +17,13 @@ def init(args):
         sys.exit()
     user_id = args[1]
     password = args[2]
-  
+    
+    config = ConfigParser.ConfigParser()
+    config.add_section("User Information")
+    config.add_section("Keys")
+    with open("swarm.cfg", "wb") as configfile:
+        config.write(configfile)
+
     swarmtoolscore.set_user_info(user_id)
     swarmtoolscore.set_keys(user_id, password)
  

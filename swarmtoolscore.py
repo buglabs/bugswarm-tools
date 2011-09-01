@@ -22,7 +22,7 @@ def get_user_info():
 
 def set_user_info(user_id):
     config = ConfigParser.ConfigParser()
-    config.add_section("User Information")
+    config.read("%s/swarm.cfg"%(my_working_directory))
     config.set("User Information", "user_id", user_id)
 
     with open("swarm.cfg", "wb") as configfile:
@@ -30,7 +30,7 @@ def set_user_info(user_id):
 
 def set_keys(user_id, password):
     config = ConfigParser.ConfigParser()
-    config.add_section("Keys")
+    config.read("%s/swarm.cfg"%(my_working_directory))
     conn = httplib.HTTPConnection('api.bugswarm.net')
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
