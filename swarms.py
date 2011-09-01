@@ -86,13 +86,13 @@ def main():
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    if sys.argv[1] == "create":
+    elif sys.argv[1] == "create":
         opt_usage = "usage: %s <name> <description> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not; 'true' or 'false'.", metavar="<public>")
         (options, args) = parser.parse_args()
         create(keys["master"], options, args)     
-    if sys.argv[1] == "update":
+    elif sys.argv[1] == "update":
         opt_usage = "usage: %s <swarm_id> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-n", "--name", dest="name", help="Set the Swarm's name", metavar="<name>")
@@ -100,20 +100,21 @@ def main():
         parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not; 'true' or 'false'.", metavar="<public>")
         (options, args) = parser.parse_args()
         update(keys["master"], options, args)
-    if sys.argv[1] == "destroy":
+    elif sys.argv[1] == "destroy":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         destroy(keys["master"], args)
-    if sys.argv[1] == "list_user_swarms":
+    elif sys.argv[1] == "list_user_swarms":
         opt_usage = "usage: %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         list_user_swarms(keys["master"], args)
-    if sys.argv[1] == "get_swarm_info":
+    elif sys.argv[1] == "get_swarm_info":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         get_swarm_info(keys["master"], args)
-
+    else:
+        usage(sys.argv[0])
 main()
