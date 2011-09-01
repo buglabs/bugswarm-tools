@@ -28,7 +28,7 @@ def create(user_id, options, args):
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
-    init.init(user_id, password)
+    init.init(("x", user_id, password))
 
 def list(user_id, args):
     if len(args) != 2:
@@ -47,7 +47,7 @@ def list(user_id, args):
 def main():
     user_info = swarmtoolscore.get_user_info()
     if len(sys.argv) == 1:
-        usage(sys.argv[0])
+        this.usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: %s <password> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -60,5 +60,5 @@ def main():
         (options, args) = parser.parse_args()
         list(user_info["user_id"], args)
     else:
-        usage(sys.argv[0])
+        this.usage(sys.argv[0])
 main()

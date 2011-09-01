@@ -56,9 +56,4 @@ def main():
         (options, args) = parser.parse_args()
         init(args)
 
-    elif sys.argv[0] == "init.py" and sys.argv[1] == "init":
-        init(sys.argv[2], sys.argv[3])
-    else:
-        usage(sys.argv[0])
->>>>>>> 345c5810bb1318dc24fbb7ad6cdc7e2662c7dbb7
 main()
