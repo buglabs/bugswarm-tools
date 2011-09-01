@@ -31,6 +31,6 @@ def main():
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        consume(keys["producer"], args)
+        consume(keys["consumer"], args)
 
 main()
