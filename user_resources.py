@@ -21,7 +21,10 @@ def create(api_key, options, args):
     if options.description != None:
         create_resource["description"] = options.description
     if options.position != None:
-        create_resource["position"] = options.position
+        latitude = options.position[1]
+        longitude = options.position[3]
+        latlon = {"latitude": int(latitude), "longitude": int(longitude)}
+        create_resource["position"] = latlon
     create_resource_json = json.dumps(create_resource)
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("POST", "/resources", create_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
@@ -43,8 +46,12 @@ def update(api_key, options, args):
     if options.description != None:
         update_resource["description"] = options.description
     if options.position != None:
-        update_resource["position"] = options.position
+        latitude = options.position[1]
+        longitude = options.position[3]
+        latlon = {"latitude": int(latitude), "longitude": int(longitude)}
+        update_resource["position"] = latlon
     update_resource_json = json.dumps(update_resource)
+    print update_resource_json
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("PUT", "/resources/%s"%(resource_id), update_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
@@ -107,7 +114,7 @@ def main():
         opt_usage = "usage: %s <resource_id> <name> <machine_type> [options]"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="{\"longitude\":<value>, \"latitude\":<value>}")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="'(latitude, longitude)'")
         (options, args) = parser.parse_args()
         create(keys["master"], options, args)
     elif sys.argv[1] == "update":
@@ -116,7 +123,7 @@ def main():
         parser.add_option("-n", "--name", dest="name", help="Set the Resource's name", metavar="<name>")
         parser.add_option("-t", "--type", dest="machine_type", help="Set the Resource's machine type", metavar="<machine_type>")
         parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="{\"longitude\":<value>, \"latitude\":<value>}")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="'(latitude, longitude)'")
         (options, args) = parser.parse_args()
         update(keys["master"], options, args)
     elif sys.argv[1] == "destroy":
