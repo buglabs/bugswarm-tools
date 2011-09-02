@@ -71,18 +71,27 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "add":
         opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm to add to. This is a really long, unique identifier." \
+                    +"\n*user_id: The ID of the User who's resource is being added." \
+                    +"\n*resource_id: The ID of the Resource to add. This is the \"id\" field in the Resource's listed JSON." \
+                    +"\n*type: The type of the Resource to add. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         add(keys["master"], args)
     elif sys.argv[1] == "remove":
         opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm remove from. This is a really long, unique identifier." \
+                    +"\n*user_id: The ID of the User who's resource is being removed." \
+                    +"\n*resource_id: The ID of the Resource to remove. This is the \"id\" field in the Resource's listed JSON." \
+                    +"\n*type: The type of the Resource to remove. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         remove(keys["master"], args)
     elif sys.argv[1] == "list_swarm_resources":
         opt_usage = "usage: %s <swarm_id> [options]"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm who's Resources will be listed."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="type", help="Limit the list to only producers or only consumers", metavar="<type>")
+        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer'.", metavar="<type>")
         (options, args) = parser.parse_args()
         list_swarm_resources(keys["master"], options, args)
     else:

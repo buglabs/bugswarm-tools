@@ -49,12 +49,14 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: %s <password> [options]"%(sys.argv[1])
+        opt_usage += "\n*password: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', 'consumer' (master is used by default)", metavar="<key_type>")
+        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', or 'consumer' (master is used by default)", metavar="<key_type>")
         (options, args) =  parser.parse_args()
         create(user_info["user_id"], options, args)
     elif sys.argv[1] == "list":
         opt_usage = "usage: %s <password>"%(sys.argv[1])
+        opt_usage += "\n*password: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         list(user_info["user_id"], args)

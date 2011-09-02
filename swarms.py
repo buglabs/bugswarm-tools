@@ -88,20 +88,24 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: %s <name> <description> [options]"%(sys.argv[1])
+        opt_usage += "\n*name: The name of the Swarm being created." \
+                    +"\n*description: The description of the Swarm being created."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not; 'true' or 'false'.", metavar="<public>")
+        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not. Valid types; 'true', 'false'.", metavar="<public>")
         (options, args) = parser.parse_args()
         create(keys["master"], options, args)     
     elif sys.argv[1] == "update":
         opt_usage = "usage: %s <swarm_id> [options]"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm being updated. This is a really long, unique identifier."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-n", "--name", dest="name", help="Set the Swarm's name", metavar="<name>")
         parser.add_option("-d", "--description", dest="description", help="Set the Swarm's description", metavar="<description>")
-        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not; 'true' or 'false'.", metavar="<public>")
+        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not. Valid types; 'true', 'false'.", metavar="<public>")
         (options, args) = parser.parse_args()
         update(keys["master"], options, args)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm to destroy. This is a really long, unique identifier."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         destroy(keys["master"], args)
@@ -112,6 +116,7 @@ def main():
         list_user_swarms(keys["master"], args)
     elif sys.argv[1] == "get_swarm_info":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm who's info is desired. This is a really long, unique indentifier."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         get_swarm_info(keys["master"], args)

@@ -32,6 +32,8 @@ def main():
         usage(sys.argv[0])
     if sys.argv[1] == "init":
         opt_usage = "usage: %s <user_id> <password>"%(sys.argv[1])
+        opt_usage += "\n*user_id: Your BUGnet account User ID." \
+                    +"\n*password: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         init(args)

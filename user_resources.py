@@ -112,22 +112,27 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: %s <resource_id> <name> <machine_type> [options]"%(sys.argv[1])
+        opt_usage += "\n*resource_id: The ID of the Resource to create. This is unique to this resource." \
+                    +"\n*name: The name of the Resource to create." \
+                    +"\n*machine_type: The machine type of the Resource to create. Valid types; 'pc', 'smartphone', 'bug'."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="'(latitude, longitude)'")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surounded by quotations.", metavar="'(latitude, longitude)'")
         (options, args) = parser.parse_args()
         create(keys["master"], options, args)
     elif sys.argv[1] == "update":
         opt_usage = "usage: %s <resource_id> [options]"%(sys.argv[1])
+        opt_usage += "\n*resource_id: The ID of the Resource to update. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-n", "--name", dest="name", help="Set the Resource's name", metavar="<name>")
-        parser.add_option("-t", "--type", dest="machine_type", help="Set the Resource's machine type", metavar="<machine_type>")
+        parser.add_option("-t", "--type", dest="machine_type", help="Set the Resource's machine type. Valid types; 'pc', 'smartphone', 'bug'.", metavar="<machine_type>")
         parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position", metavar="'(latitude, longitude)'")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surrounded by quotations.", metavar="'(latitude, longitude)'")
         (options, args) = parser.parse_args()
         update(keys["master"], options, args)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
+        opt_usage += "\n*resource_id: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         destroy(keys["master"], args)
@@ -138,11 +143,13 @@ def main():
         list_user_resources(keys["master"], args)
     elif sys.argv[1] == "get_resource_info":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
+        opt_usage += "\n*resource_id: The ID of the Resource who's info is desired. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         get_resource_info(keys["master"], args)
     elif sys.argv[1] == "list_swarms_with_resource":
         opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
+        opt_usage += "\n*resource_id: The ID of the Resource. The Swarms that the Resource is a member of will be listed."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         list_swarms_with_resource(keys["master"], args)

@@ -29,6 +29,7 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "consume":
         opt_usage = "usage: %s <swarm_id>"%(sys.argv[1])
+        opt_usage += "\n*swarm_id: The ID of the Swarm to consume. This is a really long, unique identifier."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         consume(keys["consumer"], args)
