@@ -33,11 +33,11 @@ def remove(api_key, swarm_id, user_id, resource_id, type):
 def list_swarm_resources(api_key, swarm_id, type):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     if type != None:
-        if type == "producer" or type == "consumer":
+        if type == "producer" or type == "consumer" or type == "both":
             print "/swarms/%s/resource?type=%s"%(swarm_id, type)
             conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, type), None, {"x-bugswarmapikey":api_key})
         else:
-            print "Invalid type. Option must be 'producer' or 'consumer'."
+            print "Invalid type. Option must be 'producer', 'consumer', or 'both'."
             sys.exit()
     else:
         conn.request("GET", "/swarms/%s/resources"%(swarm_id), None, {"x-bugswarmapikey":api_key})
@@ -55,7 +55,7 @@ def main():
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm to add to. This is a really long, unique identifier." \
                     +"\n  *USER_ID: The ID of the User who's resource is being added." \
                     +"\n  *RESOURCE_ID: The ID of the Resource to add. This is the \"id\" field in the Resource's listed JSON." \
-                    +"\n  *TYPE: The type of the Resource to add. Valid types; 'producer', 'consumer'."
+                    +"\n  *TYPE: The type of the Resource to add. Valid types; 'producer', 'consumer', 'both'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 5:
