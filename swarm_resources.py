@@ -71,7 +71,7 @@ def main():
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm remove from. This is a really long, unique identifier." \
                     +"\n  *USER_ID: The ID of the User who's resource is being removed." \
                     +"\n  *RESOURCE_ID: The ID of the Resource to remove. This is the \"id\" field in the Resource's listed JSON." \
-                    +"\n  *TYPE: The type of the Resource to remove. Valid types; 'producer', 'consumer'."
+                    +"\n  *TYPE: The type of the Resource to remove. Valid types; 'producer', 'consumer', 'both'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 5:
@@ -86,7 +86,7 @@ def main():
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's Resources will be listed."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer'.", metavar="TYPE")
+        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer', 'both'.", metavar="TYPE")
         (options, args) = parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
