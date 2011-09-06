@@ -18,13 +18,7 @@ def signal_handler(signal, frame):
         print 'Http connection closed.'
         sys.exit(0)
 
-def produce(api_key, args):
-    if len(args) != 4:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    swarm_id = args[1]
-    resource_id = args[2]
-    feed_name = args[3]
+def produce(api_key, swarm_id, resource_id, feed_name):
     global conn 
     conn = httplib.HTTPConnection('api.bugswarm.net')
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_id, feed_name, swarm_id)
@@ -60,15 +54,23 @@ def main():
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    signal.signal(signal.SIGINT, signal_handler)
-    if sys.argv[1] == "produce":
-        opt_usage = "usage: <data> | python %s <swarm_id> <resource_id> <feed_name>"%(sys.argv[1])
-        opt_usage += "\n*data: The data to produce in the Feed. Valid forms; \"echo 'data here'\", \"cat <filename>\"." \
-                    +"\n*swarm_id: The ID of the Swarm to produce to. This is a really long, unique identifier." \
-                    +"\n*resource_id: The ID of the Resource to produce with. This is the \"id\" field in the resource's listed JSON." \
-                    +"\n*feed_name: The name of the Feed you are producing."
+    elif sys.argv[1] == "produce":
+        signal.signal(signal.SIGINT, signal_handler)
+        opt_usage = "usage: \n  DATA | python %s SWARM_ID RESOURCE_ID FEED_NAME"%(sys.argv[1])
+        opt_usage += "\n\n  *DATA: The data to produce in the Feed. Valid forms; \"echo 'data here'\", \"cat <filename>\"." \
+                    +"\n  *SWARM_ID: The ID of the Swarm to produce to. This is a really long, unique identifier." \
+                    +"\n  *RESOURCE_ID: The ID of the Resource to produce with. This is the \"id\" field in the resource's listed JSON." \
+                    +"\n  *FEED_NAME: The name of the Feed you are producing."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        produce(keys["producer"], args)
+        if len(args) != 4:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        swarm_id = args[1]
+        resource_id = args[2]
+        feed_name = args[3]
+        produce(keys["producer"], swarm_id, resource_id, feed_name)
+    else:
+        usage(sys.argv[0])
 
 main()

@@ -10,14 +10,7 @@ def usage(script_name):
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def add(api_key, args):
-    if len(args) != 5:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    swarm_id = args[1]
-    user_id = args[2]
-    resource_id = args[3]
-    type = args[4]
+def add(api_key, swarm_id, user_id, resource_id, type):
     add_resource = {"user_id": user_id, "resource": resource_id, "type": type}
     add_resource_json = json.dumps(add_resource)
     conn = httplib.HTTPConnection('api.bugswarm.net')
@@ -27,14 +20,7 @@ def add(api_key, args):
     conn.close()
     print txt
 
-def remove(api_key, args):
-    if len(args) != 5:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    swarm_id = args[1]
-    user_id = args[2]
-    resource_id = args[3]
-    type = args[4]
+def remove(api_key, swarm_id, user_id, resource_id, type):
     remove_resource = {"user_id": user_id, "resource": resource_id, "type": type}
     remove_resource_json = json.dumps(remove_resource)
     conn = httplib.HTTPConnection('api.bugswarm.net')
@@ -44,17 +30,12 @@ def remove(api_key, args):
     conn.close()
     print txt
 
-def list_swarm_resources(api_key, options, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    swarm_id = args[1]
+def list_swarm_resources(api_key, swarm_id, type):
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    if options.type != None:
-        if options.type == "producer":
-            conn.request("GET", "/swarms/%s/resource?type=producer"%(swarm_id), None, {"x-bugswarmapikey":api_key})
-        if options.type == "consumer":
-            conn.request("GET", "/swarms/%s/resource?type=consumer"%(swarm_id), None, {"x-bugswarmapikey":api_key})
+    if type != None:
+        if type == "producer" or type == "consumer":
+            print "/swarms/%s/resource?type=%s"%(swarm_id, type)
+            conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, type), None, {"x-bugswarmapikey":api_key})
         else:
             print "Invalid type. Option must be 'producer' or 'consumer'."
             sys.exit()
@@ -70,30 +51,48 @@ def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "add":
-        opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
-        opt_usage += "\n*swarm_id: The ID of the Swarm to add to. This is a really long, unique identifier." \
-                    +"\n*user_id: The ID of the User who's resource is being added." \
-                    +"\n*resource_id: The ID of the Resource to add. This is the \"id\" field in the Resource's listed JSON." \
-                    +"\n*type: The type of the Resource to add. Valid types; 'producer', 'consumer'."
+        opt_usage = "usage: \n  %s SWARM_ID USER_ID RESOURCE_ID TYPE"%(sys.argv[1])
+        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm to add to. This is a really long, unique identifier." \
+                    +"\n  *USER_ID: The ID of the User who's resource is being added." \
+                    +"\n  *RESOURCE_ID: The ID of the Resource to add. This is the \"id\" field in the Resource's listed JSON." \
+                    +"\n  *TYPE: The type of the Resource to add. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        add(keys["master"], args)
+        if len(args) != 5:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        swarm_id = args[1]
+        user_id = args[2]
+        resource_id = args[3]
+        type = args[4]
+        add(keys["master"], swarm_id, user_id, resource_id, type)
     elif sys.argv[1] == "remove":
-        opt_usage = "usage: %s <swarm_id> <user_id> <resource_id> <type>"%(sys.argv[1])
-        opt_usage += "\n*swarm_id: The ID of the Swarm remove from. This is a really long, unique identifier." \
-                    +"\n*user_id: The ID of the User who's resource is being removed." \
-                    +"\n*resource_id: The ID of the Resource to remove. This is the \"id\" field in the Resource's listed JSON." \
-                    +"\n*type: The type of the Resource to remove. Valid types; 'producer', 'consumer'."
+        opt_usage = "usage: \n  %s SWARM_ID USER_ID RESOURCE_ID TYPE"%(sys.argv[1])
+        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm remove from. This is a really long, unique identifier." \
+                    +"\n  *USER_ID: The ID of the User who's resource is being removed." \
+                    +"\n  *RESOURCE_ID: The ID of the Resource to remove. This is the \"id\" field in the Resource's listed JSON." \
+                    +"\n  *TYPE: The type of the Resource to remove. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        remove(keys["master"], args)
+        if len(args) != 5:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        swarm_id = args[1]
+        user_id = args[2]
+        resource_id = args[3]
+        type = args[4]
+        remove(keys["master"], swarm_id, user_id, resource_id, type)
     elif sys.argv[1] == "list_swarm_resources":
-        opt_usage = "usage: %s <swarm_id> [options]"%(sys.argv[1])
-        opt_usage += "\n*swarm_id: The ID of the Swarm who's Resources will be listed."
+        opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
+        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's Resources will be listed."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer'.", metavar="<type>")
+        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer'.", metavar="TYPE")
         (options, args) = parser.parse_args()
-        list_swarm_resources(keys["master"], options, args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        swarm_id = args[1]
+        list_swarm_resources(keys["master"], swarm_id, options.type)
     else:
         usage(sys.argv[0])
 main()

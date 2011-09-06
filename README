@@ -27,4 +27,6 @@ For each of the BUGswarm Tools scripts, simply run 'python <script name>' withou
 **Note that the swarmtoolscore.py script does not contain any standalone functions. This file simply contains helper methods for the other scripts.  Once you know what function in a given script you would like to call, simply call 'python <script name> <function name>' followed by any arguments and/or options the function may require.
 
 INTERNAL:
-If you would like to make changes to this project or have any questions, comments, or concerns, please submit them as issues in the github repository.  Thank you and happy BUGswarm developing!
+-If you would like to make changes to this project or have any questions, comments, or concerns, please submit them as issues in the github repository.  Thank you and happy BUGswarm developing!
+
+-If you would like to use BUGswarm Tools with a different server than api.bugswarm.net, simply point api.bugswarm.net to the desired IP in your /etc/hosts file. 

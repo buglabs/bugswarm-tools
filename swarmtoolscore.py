@@ -52,3 +52,4 @@ def set_keys(user_id, password):
 
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
+

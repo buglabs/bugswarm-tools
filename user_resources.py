@@ -10,19 +10,13 @@ def usage(script_name):
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def create(api_key, options, args):
-    if len(args) != 4:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    resource_id = args[1]
-    name = args[2]
-    machine_type = args[3]
+def create(api_key, resource_id, name, machine_type, description, position):
     create_resource = {"id": resource_id, "name": name, "machine_type": machine_type}
-    if options.description != None:
-        create_resource["description"] = options.description
-    if options.position != None:
-        latitude = options.position[1]
-        longitude = options.position[3]
+    if description != None:
+        create_resource["description"] = description
+    if position != None:
+        latitude = position[1]
+        longitude = position[3]
         latlon = {"latitude": int(latitude), "longitude": int(longitude)}
         create_resource["position"] = latlon
     create_resource_json = json.dumps(create_resource)
@@ -33,21 +27,17 @@ def create(api_key, options, args):
     conn.close()
     print txt
 
-def update(api_key, options, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    resource_id = args[1]
+def update(api_key, resource_id, name, machine_type, description, position):
     update_resource = {}
-    if options.name != None:
-        update_resource["name"] = options.name
-    if options.machine_type != None:
-        update_resource["machine_type"] = options.machine_type
-    if options.description != None:
-        update_resource["description"] = options.description
-    if options.position != None:
-        latitude = options.position[1]
-        longitude = options.position[3]
+    if name != None:
+        update_resource["name"] = name
+    if machine_type != None:
+        update_resource["machine_type"] = machine_type
+    if description != None:
+        update_resource["description"] = description
+    if position != None:
+        latitude = position[1]
+        longitude = position[3]
         latlon = {"latitude": int(latitude), "longitude": int(longitude)}
         update_resource["position"] = latlon
     update_resource_json = json.dumps(update_resource)
@@ -59,11 +49,7 @@ def update(api_key, options, args):
     conn.close()
     print txt
 
-def destroy(api_key, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    resource_id = args[1]
+def destroy(api_key, resource_id):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("DELETE", "/resources/%s"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -71,10 +57,7 @@ def destroy(api_key, args):
     conn.close()
     print txt
 
-def list_user_resources(api_key, args):
-    if len(args) != 1:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
+def list_user_resources(api_key):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("GET", "/resources", None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -82,11 +65,7 @@ def list_user_resources(api_key, args):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def get_resource_info(api_key, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    resource_id = args[1]
+def get_resource_info(api_key, resource_id):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("GET", "/resources/%s"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -94,11 +73,7 @@ def get_resource_info(api_key, args):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def list_swarms_with_resource(api_key, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    resource_id = args[1]
+def list_swarms_with_resource(api_key, resource_id):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("GET", "/resources/%s/swarms"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -111,48 +86,73 @@ def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
-        opt_usage = "usage: %s <resource_id> <name> <machine_type> [options]"%(sys.argv[1])
-        opt_usage += "\n*resource_id: The ID of the Resource to create. This is unique to this resource." \
-                    +"\n*name: The name of the Resource to create." \
-                    +"\n*machine_type: The machine type of the Resource to create. Valid types; 'pc', 'smartphone', 'bug'."
+        opt_usage = "usage: \n  %s RESOURCE_ID NAME MACHINE_TYPE [options]"%(sys.argv[1])
+        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to create. This is unique to this resource." \
+                    +"\n  *NAME: The name of the Resource to create." \
+                    +"\n  *MACHINE_TYPE: The machine type of the Resource to create. Valid types; 'pc', 'smartphone', 'bug'."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surounded by quotations.", metavar="'(latitude, longitude)'")
+        parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="DESCRIPTION")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
         (options, args) = parser.parse_args()
-        create(keys["master"], options, args)
+        if len(args) != 4:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        resource_id = args[1]
+        name = args[2]
+        machine_type = args[3]
+        create(keys["master"], resource_id, name, machine_type, options.description, options.position)
     elif sys.argv[1] == "update":
-        opt_usage = "usage: %s <resource_id> [options]"%(sys.argv[1])
-        opt_usage += "\n*resource_id: The ID of the Resource to update. This is the \"id\" field in the Resource's listed JSON."
+        opt_usage = "usage: \n  %s RESOURCE_ID [options]"%(sys.argv[1])
+        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to update. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-n", "--name", dest="name", help="Set the Resource's name", metavar="<name>")
-        parser.add_option("-t", "--type", dest="machine_type", help="Set the Resource's machine type. Valid types; 'pc', 'smartphone', 'bug'.", metavar="<machine_type>")
-        parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="<description>")
-        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surrounded by quotations.", metavar="'(latitude, longitude)'")
+        parser.add_option("-n", "--name", dest="name", help="Set the Resource's name", metavar="NAME")
+        parser.add_option("-t", "--type", dest="machine_type", help="Set the Resource's machine type. Valid types; 'pc', 'smartphone', 'bug'.", metavar="MACHINE_TYPE")
+        parser.add_option("-d", "--description", dest="description", help="Set the Resource's description", metavar="DESCRIPTION")
+        parser.add_option("-p", "--position", dest="position", help="Set the Resource's position. Must be a tuple of ints surrounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
         (options, args) = parser.parse_args()
-        update(keys["master"], options, args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        resource_id = args[1]
+        update(keys["master"], resource_id, options.name, options.type, options.description, options.position)
     elif sys.argv[1] == "destroy":
-        opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
-        opt_usage += "\n*resource_id: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
+        opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
+        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        destroy(keys["master"], args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        resource_id = args[1]
+        destroy(keys["master"], resource_id)
     elif sys.argv[1] == "list_user_resources":
-        opt_usage = "usage: %s"%(sys.argv[1])
+        opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        list_user_resources(keys["master"], args)
+        if len(args) != 1:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        list_user_resources(keys["master"])
     elif sys.argv[1] == "get_resource_info":
-        opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
-        opt_usage += "\n*resource_id: The ID of the Resource who's info is desired. This is the \"id\" field in the Resource's listed JSON."
+        opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
+        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource who's info is desired. This is the \"id\" field in the Resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        get_resource_info(keys["master"], args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        resource_id = args[1]
+        get_resource_info(keys["master"], resource_id)
     elif sys.argv[1] == "list_swarms_with_resource":
-        opt_usage = "usage: %s <resource_id>"%(sys.argv[1])
-        opt_usage += "\n*resource_id: The ID of the Resource. The Swarms that the Resource is a member of will be listed."
+        opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
+        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource. The Swarms that the Resource is a member of will be listed."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        list_swarms_with_resource(keys["master"], args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        resource_id = args[1]
+        list_swarms_with_resource(keys["master"], resource_id)
     else:
         usage(sys.argv[0])
 main()

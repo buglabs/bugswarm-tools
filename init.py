@@ -11,13 +11,7 @@ def usage(script_name):
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
 
-def init(args):
-    if len(args) != 3:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    user_id = args[1]
-    password = args[2]
-    
+def init(user_id, password):
     config = ConfigParser.ConfigParser()
     config.add_section("User Information")
     config.add_section("Keys")
@@ -30,12 +24,19 @@ def init(args):
 def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
-    if sys.argv[1] == "init":
-        opt_usage = "usage: %s <user_id> <password>"%(sys.argv[1])
-        opt_usage += "\n*user_id: Your BUGnet account User ID." \
-                    +"\n*password: Your BUGnet account password."
+    elif sys.argv[1] == "init":
+        opt_usage = "usage: \n  %s USER_ID PASSWORD"%(sys.argv[1])
+        opt_usage += "\n\n  *USER_ID: Your BUGnet account User ID." \
+                    +"\n  *PASSWORD: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        init(args)
+        if len(args) != 3:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        user_id = args[1]
+        password = args[2]
+        init(user_id, password)
+    else:
+        usage(sys.argv[0])
 
 main()

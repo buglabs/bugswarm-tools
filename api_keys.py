@@ -11,16 +11,12 @@ def usage(script_name):
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
  
-def create(user_id, options, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    password = args[1]
+def create(user_id, password, key_type):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
-    if (options.key_type != None):
-        conn.request("POST", "/keys/" + options.key_type, None, {"Authorization":auth_header})
+    if (key_type != None):
+        conn.request("POST", "/keys/" + key_type, None, {"Authorization":auth_header})
     else:
         conn.request("POST", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
@@ -29,11 +25,7 @@ def create(user_id, options, args):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
     swarmtoolscore.set_keys(user_id, password)
 
-def list(user_id, args):
-    if len(args) != 2:
-        print "Invalid number of args. See --help for correct usage."
-        sys.exit()
-    password = args[1]
+def list(user_id, password):
     conn = httplib.HTTPConnection('api.bugswarm.net')
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
@@ -48,18 +40,26 @@ def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
-        opt_usage = "usage: %s <password> [options]"%(sys.argv[1])
-        opt_usage += "\n*password: Your BUGnet account password."
+        opt_usage = "usage: \n  %s PASSWORD [options]"%(sys.argv[1])
+        opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', or 'consumer' (master is used by default)", metavar="<key_type>")
+        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', or 'consumer' (master is used by default)", metavar="KEY_TYPE")
         (options, args) =  parser.parse_args()
-        create(user_info["user_id"], options, args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        password = args[1]
+        create(user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
-        opt_usage = "usage: %s <password>"%(sys.argv[1])
-        opt_usage += "\n*password: Your BUGnet account password."
+        opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
+        opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        list(user_info["user_id"], args)
+        if len(args) != 2:
+            print "Invalid number of args. See --help for correct usage."
+            sys.exit()
+        password = args[1]
+        list(user_info["user_id"], password)
     else:
         usage(sys.argv[0])
 main()
