@@ -46,14 +46,14 @@ def set_keys(user_id, password):
         config.set("Keys", key_type, key_value)
 
     if config.has_option("Keys", "master") == False:
-        key_obj = create_key(user_id, password, master)
-        config.set("Keys", "master", key_obj["key"])
+        key_obj = create_key(user_id, password, "master")
+        config.set("Keys", "master", key_obj["apikey"])
     if config.has_option("Keys", "producer") == False:
-        key_obj = create_key(user_id, password, producer)
-        config.set("Keys", "producer", key_obj["key"])
+        key_obj = create_key(user_id, password, "producer")
+        config.set("Keys", "producer", key_obj["apikey"])
     if config.has_option("Keys", "consumer") == False:
-        key_obj = create_key(user_id, password, consumer)
-        config.set("Keys", "consumer", key_obj["key"])
+        key_obj = create_key(user_id, password, "consumer")
+        config.set("Keys", "consumer", key_obj["apikey"])
 
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
