@@ -36,7 +36,6 @@ def list(user_id, password):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def main():
-    user_info = swarmtoolscore.get_user_info()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
@@ -49,6 +48,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         password = args[1]
+        user_info = swarmtoolscore.get_user_info()
         create(user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
@@ -59,6 +59,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         password = args[1]
+        user_info = swarmtoolscore.get_user_info()
         list(user_info["user_id"], password)
     else:
         usage(sys.argv[0])
