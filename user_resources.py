@@ -41,7 +41,6 @@ def update(api_key, resource_id, name, machine_type, description, position):
         latlon = {"latitude": int(latitude), "longitude": int(longitude)}
         update_resource["position"] = latlon
     update_resource_json = json.dumps(update_resource)
-    print update_resource_json
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("PUT", "/resources/%s"%(resource_id), update_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
@@ -114,7 +113,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        update(keys["master"], resource_id, options.name, options.type, options.description, options.position)
+        update(keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
