@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from optparse import OptionParser
-import swarmtoolscore
+from lib import swarmtoolscore
 import ConfigParser
 import sys
 import json
@@ -20,7 +20,7 @@ def init(user_id, password):
 
     swarmtoolscore.set_user_info(user_id)
     swarmtoolscore.set_keys(user_id, password)
- 
+
 def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])

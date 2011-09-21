@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from optparse import OptionParser
-import swarmtoolscore
+from lib import swarmtoolscore
 import sys
 import httplib
 import os
