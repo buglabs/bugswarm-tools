@@ -6,7 +6,7 @@ import httplib
 import json
 
 def usage(script_name):
-    print "%s [create|update|destroy|list_user_resources|get_resource_info|list_swarms_with_resource] \n"%(script_name)
+    print "%s [create|update|destroy|list|get_resource_info|list_swarms_with_resource] \n"%(script_name)
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
@@ -124,7 +124,7 @@ def main():
             sys.exit()
         resource_id = args[1]
         destroy(keys["master"], resource_id)
-    elif sys.argv[1] == "list_user_resources":
+    elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()

@@ -6,12 +6,12 @@ import httplib
 import json
 
 def usage(script_name):
-    print "%s [add|remove|list_swarm_resources] \n"%(script_name)
+    print "%s [add|remove|list] \n"%(script_name)
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def add(api_key, swarm_id, user_id, resource_id, type):
-    add_resource = {"user_id": user_id, "resource": resource_id, "type": type}
+def add(api_key, swarm_id, user_id, resource_id, resource_type):
+    add_resource = {"user_id": user_id, "resource": resource_id, "type": resource_type}
     add_resource_json = json.dumps(add_resource)
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("POST", "/swarms/%s/resources"%(swarm_id), add_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
@@ -20,8 +20,8 @@ def add(api_key, swarm_id, user_id, resource_id, type):
     conn.close()
     print txt
 
-def remove(api_key, swarm_id, user_id, resource_id, type):
-    remove_resource = {"user_id": user_id, "resource": resource_id, "type": type}
+def remove(api_key, swarm_id, user_id, resource_id, resource_type):
+    remove_resource = {"user_id": user_id, "resource": resource_id, "type": resource_type}
     remove_resource_json = json.dumps(remove_resource)
     conn = httplib.HTTPConnection('api.bugswarm.net')
     conn.request("DELETE", "/swarms/%s/resources"%(swarm_id), remove_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
@@ -30,12 +30,12 @@ def remove(api_key, swarm_id, user_id, resource_id, type):
     conn.close()
     print txt
 
-def list_swarm_resources(api_key, swarm_id, type):
+def list_swarm_resources(api_key, swarm_id, resource_type):
     conn = httplib.HTTPConnection('api.bugswarm.net')
-    if type != None:
-        if type == "producer" or type == "consumer" or type == "both":
-            print "/swarms/%s/resource?type=%s"%(swarm_id, type)
-            conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, type), None, {"x-bugswarmapikey":api_key})
+    if resource_type != None:
+        if resource_type == "producer" or resource_type == "consumer" or resource_type == "both":
+            print "/swarms/%s/resource?type=%s"%(swarm_id, resource_type)
+            conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, resource_type), None, {"x-bugswarmapikey":api_key})
         else:
             print "Invalid type. Option must be 'producer', 'consumer', or 'both'."
             sys.exit()
@@ -64,8 +64,8 @@ def main():
         swarm_id = args[1]
         user_id = args[2]
         resource_id = args[3]
-        type = args[4]
-        add(keys["master"], swarm_id, user_id, resource_id, type)
+        resource_type = args[4]
+        add(keys["master"], swarm_id, user_id, resource_id, resource_type)
     elif sys.argv[1] == "remove":
         opt_usage = "usage: \n  %s SWARM_ID USER_ID RESOURCE_ID TYPE"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm remove from. This is a really long, unique identifier." \
@@ -80,9 +80,9 @@ def main():
         swarm_id = args[1]
         user_id = args[2]
         resource_id = args[3]
-        type = args[4]
-        remove(keys["master"], swarm_id, user_id, resource_id, type)
-    elif sys.argv[1] == "list_swarm_resources":
+        resource_type = args[4]
+        remove(keys["master"], swarm_id, user_id, resource_id, resource_type)
+    elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's Resources will be listed."
         parser = OptionParser(usage = opt_usage)

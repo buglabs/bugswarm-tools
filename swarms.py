@@ -6,7 +6,7 @@ import httplib
 import json
 
 def usage(script_name):
-    print "%s [create|update|destroy|list_user_swarms|get_swarm_info] \n"%(script_name)
+    print "%s [create|update|destroy|list|get_swarm_info] \n"%(script_name)
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
@@ -102,7 +102,7 @@ def main():
             sys.exit()
         swarm_id = args[1]
         destroy(keys["master"], swarm_id)
-    elif sys.argv[1] == "list_user_swarms":
+    elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
