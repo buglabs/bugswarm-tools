@@ -4,7 +4,7 @@ import os.path
 import httplib
 import base64
 import json
-my_working_directory = os.path.dirname(__file__)
+my_working_directory = os.path.abspath(os.path.dirname(__file__)+"/../")
 
 def get_keys():
     config = ConfigParser.ConfigParser()
