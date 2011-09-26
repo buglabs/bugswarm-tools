@@ -11,8 +11,8 @@ def usage(script_name):
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
  
-def create(user_id, password, key_type):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def create(hostname, user_id, password, key_type):
+    conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     if (key_type != None):
@@ -25,8 +25,8 @@ def create(user_id, password, key_type):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
     swarmtoolscore.set_keys(user_id, password)
 
-def list(user_id, password):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def list(hostname, user_id, password):
+    conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
@@ -36,6 +36,7 @@ def list(user_id, password):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def main():
+    keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
@@ -49,7 +50,7 @@ def main():
             sys.exit()
         password = args[1]
         user_info = swarmtoolscore.get_user_info()
-        create(user_info["user_id"], password, options.key_type)
+        create(keys["hostname"], user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
         opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
@@ -60,7 +61,7 @@ def main():
             sys.exit()
         password = args[1]
         user_info = swarmtoolscore.get_user_info()
-        list(user_info["user_id"], password)
+        list(keys["hostname"], user_info["user_id"], password)
     else:
         usage(sys.argv[0])
 main()
