@@ -18,9 +18,9 @@ def signal_handler(signal, frame):
         print 'Http connection closed.'
         sys.exit(0)
 
-def produce(api_key, swarm_id, resource_id, feed_name):
+def produce(hostname, api_key, swarm_id, resource_id, feed_name):
     global conn 
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+    conn = httplib.HTTPConnection(hostname)
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_id, feed_name, swarm_id)
     print sel
     print api_key
@@ -69,7 +69,7 @@ def main():
         swarm_id = args[1]
         resource_id = args[2]
         feed_name = args[3]
-        produce(keys["producer"], swarm_id, resource_id, feed_name)
+        produce(keys["hostname"], keys["producer"], swarm_id, resource_id, feed_name)
     else:
         usage(sys.argv[0])
 

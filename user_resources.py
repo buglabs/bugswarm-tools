@@ -10,7 +10,7 @@ def usage(script_name):
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def create(api_key, resource_id, name, machine_type, description, position):
+def create(hostname, api_key, resource_id, name, machine_type, description, position):
     create_resource = {"id": resource_id, "name": name, "machine_type": machine_type}
     if description != None:
         create_resource["description"] = description
@@ -20,14 +20,14 @@ def create(api_key, resource_id, name, machine_type, description, position):
         latlon = {"latitude": int(latitude), "longitude": int(longitude)}
         create_resource["position"] = latlon
     create_resource_json = json.dumps(create_resource)
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+    conn = httplib.HTTPConnection(hostname)
     conn.request("POST", "/resources", create_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print txt
 
-def update(api_key, resource_id, name, machine_type, description, position):
+def update(hostname, api_key, resource_id, name, machine_type, description, position):
     update_resource = {}
     if name != None:
         update_resource["name"] = name
@@ -41,39 +41,39 @@ def update(api_key, resource_id, name, machine_type, description, position):
         latlon = {"latitude": int(latitude), "longitude": int(longitude)}
         update_resource["position"] = latlon
     update_resource_json = json.dumps(update_resource)
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+    conn = httplib.HTTPConnection(hostname)
     conn.request("PUT", "/resources/%s"%(resource_id), update_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print txt
 
-def destroy(api_key, resource_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def destroy(hostname, api_key, resource_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("DELETE", "/resources/%s"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print txt
 
-def list_user_resources(api_key):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def list_user_resources(hostname, api_key):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources", None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def get_resource_info(api_key, resource_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def get_resource_info(hostname, api_key, resource_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources/%s"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def list_swarms_with_resource(api_key, resource_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def list_swarms_with_resource(hostname, api_key, resource_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources/%s/swarms"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
@@ -99,7 +99,7 @@ def main():
         resource_id = args[1]
         name = args[2]
         machine_type = args[3]
-        create(keys["master"], resource_id, name, machine_type, options.description, options.position)
+        create(keys["hostname"], keys["master"], resource_id, name, machine_type, options.description, options.position)
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s RESOURCE_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to update. This is the \"id\" field in the Resource's listed JSON."
@@ -113,7 +113,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        update(keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
+        update(keys["hostname"], keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
@@ -123,7 +123,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        destroy(keys["master"], resource_id)
+        destroy(keys["hostname"], keys["master"], resource_id)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -131,7 +131,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_resources(keys["master"])
+        list_user_resources(keys["hostname"], keys["master"])
     elif sys.argv[1] == "get_resource_info":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource who's info is desired. This is the \"id\" field in the Resource's listed JSON."
@@ -141,7 +141,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        get_resource_info(keys["master"], resource_id)
+        get_resource_info(keys["hostname"], keys["master"], resource_id)
     elif sys.argv[1] == "list_swarms_with_resource":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource. The Swarms that the Resource is a member of will be listed."
@@ -151,7 +151,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        list_swarms_with_resource(keys["master"], resource_id)
+        list_swarms_with_resource(keys["hostname"], keys["master"], resource_id)
     else:
         usage(sys.argv[0])
 main()
