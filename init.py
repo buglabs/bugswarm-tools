@@ -39,9 +39,9 @@ def main():
         user_id = args[1]
         password = args[2]
         
-        if len(args) = 4:
+        if len(args) == 4:
         	init(user_id, password, args[3])
-        else
+        else:
         	init(user_id, password, "api.bugswarm.net")
     else:
         usage(sys.argv[0])
