@@ -20,7 +20,7 @@ def init(user_id, password, hostname):
         config.write(configfile)
 
     swarmtoolscore.set_user_info(user_id)
-    swarmtoolscore.set_keys(user_id, password)
+    swarmtoolscore.set_keys(hostname, user_id, password)
     swarmtoolscore.set_hostname(hostname)
 
 def main():

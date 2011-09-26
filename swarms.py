@@ -10,8 +10,8 @@ def usage(script_name):
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def create(api_key, name, description, public):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def create(hostname, api_key, name, description, public):
+    conn = httplib.HTTPConnection(hostname)
     create_swarm = {"name": name, "description": description}
     if public != None:
         create_swarm["public"] = public
@@ -22,8 +22,8 @@ def create(api_key, name, description, public):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def update(api_key, swarm_id, name, description, public):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def update(hostname, api_key, swarm_id, name, description, public):
+    conn = httplib.HTTPConnection(hostname)
     update_swarm = {}
     if name != None:
         update_swarm["name"] = name
@@ -38,24 +38,24 @@ def update(api_key, swarm_id, name, description, public):
     conn.close()
     print txt
 
-def destroy(api_key, swarm_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def destroy(hostname, api_key, swarm_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("DELETE", "/swarms/%s"%(swarm_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print txt
 
-def list_user_swarms(api_key):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def list_user_swarms(hostname, api_key):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/swarms", None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def get_swarm_info(api_key, swarm_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def get_swarm_info(hostname, api_key, swarm_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/swarms/%s"%(swarm_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
@@ -78,7 +78,7 @@ def main():
             sys.exit()
         name = args[1]
         description = args[2]
-        create(keys["master"], name, description, options.public)     
+        create(keys["hostname"], keys["master"], name, description, options.public)     
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm being updated. This is a really long, unique identifier."
@@ -91,7 +91,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        update(keys["master"], swarm_id, options.name, options.description, options.public)
+        update(keys["hostname"], keys["master"], swarm_id, options.name, options.description, options.public)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm to destroy. This is a really long, unique identifier."
@@ -109,7 +109,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_swarms(keys["master"])
+        list_user_swarms(keys["hostname"], keys["master"])
     elif sys.argv[1] == "get_swarm_info":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's info is desired. This is a really long, unique indentifier."
@@ -119,7 +119,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        get_swarm_info(keys["master"], swarm_id)
+        get_swarm_info(keys["hostname"], keys["master"], swarm_id)
     else:
         usage(sys.argv[0])
 main()

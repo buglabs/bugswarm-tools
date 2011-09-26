@@ -12,7 +12,8 @@ def get_keys():
     master = config.get("Keys", "master")
     consumer = config.get("Keys", "consumer")
     producer = config.get("Keys", "producer")
-    return {"master" : master, "consumer": consumer, "producer": producer}
+    hostname = config.get("Server", "hostname")
+    return {"master" : master, "consumer": consumer, "producer": producer, "hostname": hostname}
 
 def get_user_info():
     config = ConfigParser.ConfigParser()
@@ -36,16 +37,16 @@ def set_user_info(user_id):
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
 
-def set_keys(user_id, password):
+def set_keys(hostname, user_id, password):
     config = ConfigParser.ConfigParser()
     config.read("%s/swarm.cfg"%(my_working_directory))
-    resp = get_keys_from_server(user_id, password)
+    resp = get_keys_from_server(hostname, user_id, password)
     if resp.status == 404:
         print "Status is 404"
-        create_key(user_id, password, "master")
-        create_key(user_id, password, "producer")
-        create_key(user_id, password, "consumer")
-        resp = get_keys_from_server(user_id, password)
+        create_key(hostname, user_id, password, "master")
+        create_key(hostname, user_id, password, "producer")
+        create_key(hostname, user_id, password, "consumer")
+        resp = get_keys_from_server(hostname, user_id, password)
     txt = resp.read()
     json_obj = json.loads(txt)
     for key_obj in json_obj:
@@ -66,8 +67,8 @@ def set_keys(user_id, password):
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
 
-def create_key(user_id, password, key_type):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def create_key(hostname, user_id, password, key_type):
+    conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     if (key_type != None):
@@ -80,8 +81,8 @@ def create_key(user_id, password, key_type):
     json_obj = json.loads(txt)
     return json_obj
 
-def get_keys_from_server(user_id, password):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def get_keys_from_server(hostname, user_id, password):
+    conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
