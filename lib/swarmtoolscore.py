@@ -20,6 +20,14 @@ def get_user_info():
     user_id = config.get("User Information", "user_id")
     return {"user_id": user_id}
 
+def set_hostname(hostname):
+    config = ConfigParser.ConfigParser()
+    config.read("%s/swarm.cfg"%(my_working_directory))
+    config.set("Server", "hostname", hostname)
+
+    with open("swarm.cfg", "wb") as configfile:
+        config.write(configfile)
+        
 def set_user_info(user_id):
     config = ConfigParser.ConfigParser()
     config.read("%s/swarm.cfg"%(my_working_directory))
