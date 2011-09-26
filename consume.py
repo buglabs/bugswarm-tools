@@ -10,8 +10,8 @@ def usage(script_name):
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
 
-def consume(api_key, swarm_id):
-    conn = httplib.HTTPConnection('api.bugswarm.net')
+def consume(hostname, api_key, swarm_id):
+    conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/stream?swarm_id=%s"%(swarm_id), None, {"x-bugswarmapikey":api_key, "connection":"keep-alive"})
     resp = conn.getresponse()
     while(1):
@@ -32,7 +32,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        consume(keys["consumer"], swarm_id)
+        consume(keys["hostname"], keys["consumer"], swarm_id)
     else:
         usage(sys.argv[0])
 main()
