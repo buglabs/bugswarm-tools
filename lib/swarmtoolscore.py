@@ -6,14 +6,11 @@ import base64
 import json
 my_working_directory = os.path.abspath(os.path.dirname(__file__)+"/../")
 
-def get_keys():
+def get_server_info():
     config = ConfigParser.ConfigParser()
     raw_data = config.read("%s/swarm.cfg"%(my_working_directory))
-    master = config.get("Keys", "master")
-    consumer = config.get("Keys", "consumer")
-    producer = config.get("Keys", "producer")
-    hostname = config.get("Server", "hostname")
-    return {"master" : master, "consumer": consumer, "producer": producer, "hostname": hostname}
+    hostname = config.get("Server Information", "hostname")
+    return {"hostname": hostname}
 
 def get_user_info():
     config = ConfigParser.ConfigParser()
@@ -21,10 +18,18 @@ def get_user_info():
     user_id = config.get("User Information", "user_id")
     return {"user_id": user_id}
 
-def set_hostname(hostname):
+def get_keys():
+    config = ConfigParser.ConfigParser()
+    raw_data = config.read("%s/swarm.cfg"%(my_working_directory))
+    master = config.get("Keys", "master")
+    consumer = config.get("Keys", "consumer")
+    producer = config.get("Keys", "producer")
+    return {"master" : master, "consumer": consumer, "producer": producer}
+
+def set_server_info(hostname):
     config = ConfigParser.ConfigParser()
     config.read("%s/swarm.cfg"%(my_working_directory))
-    config.set("Server", "hostname", hostname)
+    config.set("Server Information", "hostname", hostname)
 
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)

@@ -20,6 +20,7 @@ def consume(hostname, api_key, swarm_id):
     conn.close();
 
 def main():
+    server_info = swarmtoolscore.get_server_info()
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
@@ -32,7 +33,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        consume(keys["hostname"], keys["consumer"], swarm_id)
+        consume(server_info["hostname"], keys["consumer"], swarm_id)
     else:
         usage(sys.argv[0])
 main()

@@ -81,6 +81,7 @@ def list_swarms_with_resource(hostname, api_key, resource_id):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def main():
+    server_info = swarmtoolscore.get_server_info()
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
@@ -99,7 +100,7 @@ def main():
         resource_id = args[1]
         name = args[2]
         machine_type = args[3]
-        create(keys["hostname"], keys["master"], resource_id, name, machine_type, options.description, options.position)
+        create(server_info["hostname"], keys["master"], resource_id, name, machine_type, options.description, options.position)
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s RESOURCE_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to update. This is the \"id\" field in the Resource's listed JSON."
@@ -113,7 +114,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        update(keys["hostname"], keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
+        update(server_info["hostname"], keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to destroy. This is the \"id\" field in the Resource's listed JSON."
@@ -123,7 +124,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        destroy(keys["hostname"], keys["master"], resource_id)
+        destroy(server_info["hostname"], keys["master"], resource_id)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -131,7 +132,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_resources(keys["hostname"], keys["master"])
+        list_user_resources(server_info["hostname"], keys["master"])
     elif sys.argv[1] == "get_resource_info":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource who's info is desired. This is the \"id\" field in the Resource's listed JSON."
@@ -141,7 +142,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        get_resource_info(keys["hostname"], keys["master"], resource_id)
+        get_resource_info(server_info["hostname"], keys["master"], resource_id)
     elif sys.argv[1] == "list_swarms_with_resource":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource. The Swarms that the Resource is a member of will be listed."
@@ -151,7 +152,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        list_swarms_with_resource(keys["hostname"], keys["master"], resource_id)
+        list_swarms_with_resource(server_info["hostname"], keys["master"], resource_id)
     else:
         usage(sys.argv[0])
 main()

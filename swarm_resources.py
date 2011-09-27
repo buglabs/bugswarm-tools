@@ -47,6 +47,7 @@ def list_swarm_resources(hostname, api_key, swarm_id, resource_type):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def main():
+    server_info = swarmtoolscore.get_server_info()
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
@@ -65,7 +66,7 @@ def main():
         user_id = args[2]
         resource_id = args[3]
         resource_type = args[4]
-        add(keys["hostname"], keys["master"], swarm_id, user_id, resource_id, resource_type)
+        add(server_info["hostname"], keys["master"], swarm_id, user_id, resource_id, resource_type)
     elif sys.argv[1] == "remove":
         opt_usage = "usage: \n  %s SWARM_ID USER_ID RESOURCE_ID TYPE"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm remove from. This is a really long, unique identifier." \
@@ -81,7 +82,7 @@ def main():
         user_id = args[2]
         resource_id = args[3]
         resource_type = args[4]
-        remove(keys["hostname"], keys["master"], swarm_id, user_id, resource_id, resource_type)
+        remove(server_info["hostname"], keys["master"], swarm_id, user_id, resource_id, resource_type)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's Resources will be listed."
@@ -92,7 +93,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        list_swarm_resources(keys["hostname"], keys["master"], swarm_id, options.type)
+        list_swarm_resources(server_info["hostname"], keys["master"], swarm_id, options.type)
     else:
         usage(sys.argv[0])
 main()

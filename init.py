@@ -13,15 +13,15 @@ def usage(script_name):
 
 def init(user_id, password, hostname):
     config = ConfigParser.ConfigParser()
+    config.add_section("Server Information")
     config.add_section("User Information")
     config.add_section("Keys")
-    config.add_section("Server")
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
 
+    swarmtoolscore.set_server_info(hostname)
     swarmtoolscore.set_user_info(user_id)
     swarmtoolscore.set_keys(hostname, user_id, password)
-    swarmtoolscore.set_hostname(hostname)
 
 def main():
     if len(sys.argv) == 1:

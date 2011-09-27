@@ -36,6 +36,7 @@ def list(hostname, user_id, password):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def main():
+    server_info = swarmtoolscore.get_server_info()
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
@@ -50,7 +51,7 @@ def main():
             sys.exit()
         password = args[1]
         user_info = swarmtoolscore.get_user_info()
-        create(keys["hostname"], user_info["user_id"], password, options.key_type)
+        create(server_info["hostname"], user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
         opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
@@ -61,7 +62,7 @@ def main():
             sys.exit()
         password = args[1]
         user_info = swarmtoolscore.get_user_info()
-        list(keys["hostname"], user_info["user_id"], password)
+        list(server_info["hostname"], user_info["user_id"], password)
     else:
         usage(sys.argv[0])
 main()

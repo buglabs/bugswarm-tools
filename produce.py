@@ -51,6 +51,7 @@ def produce(hostname, api_key, swarm_id, resource_id, feed_name):
     conn.close()
 
 def main():
+    server_info = swarmtoolscore.get_server_info()
     keys = swarmtoolscore.get_keys()
     if len(sys.argv) == 1:
         usage(sys.argv[0])
@@ -69,7 +70,7 @@ def main():
         swarm_id = args[1]
         resource_id = args[2]
         feed_name = args[3]
-        produce(keys["hostname"], keys["producer"], swarm_id, resource_id, feed_name)
+        produce(server_info["hostname"], keys["producer"], swarm_id, resource_id, feed_name)
     else:
         usage(sys.argv[0])
 
