@@ -53,6 +53,9 @@ def set_keys(hostname, user_id, password):
         create_key(hostname, user_id, password, "consumer")
         resp = get_keys_from_server(hostname, user_id, password)
     txt = resp.read()
+    if resp.status >= 400:
+        print "Something bad happened: "
+        print resp.status, txt
     json_obj = json.loads(txt)
     for key_obj in json_obj:
         key_type = key_obj["type"]

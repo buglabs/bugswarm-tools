@@ -38,11 +38,11 @@ def main():
             sys.exit()
         user_id = args[1]
         password = args[2]
-        
+
         if len(args) == 4:
-        	init(user_id, password, args[3])
+            init(user_id, password, args[3])
         else:
-        	init(user_id, password, "api.bugswarm.net")
+            init(user_id, password, "api.bugswarm.net")
     else:
         usage(sys.argv[0])
 
