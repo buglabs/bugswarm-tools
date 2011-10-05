@@ -22,8 +22,6 @@ def produce(hostname, api_key, swarm_id, resource_id, feed_name):
     global conn 
     conn = httplib.HTTPConnection(hostname)
     sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_id, feed_name, swarm_id)
-    print sel
-    print api_key
     conn.putrequest("PUT", sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
