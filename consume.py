@@ -17,6 +17,7 @@ def consume(hostname, api_key, swarm_id):
     while(1):
         txt = resp.read(1)
         sys.stdout.write(txt)
+        sys.stdout.flush()
     conn.close();
 
 def main():
