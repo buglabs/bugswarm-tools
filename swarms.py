@@ -102,7 +102,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        destroy(keys["master"], swarm_id)
+        destroy(server_info["hostname"], keys["master"], swarm_id)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
