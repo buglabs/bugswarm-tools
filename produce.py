@@ -18,11 +18,13 @@ def signal_handler(signal, frame):
         print 'Http connection closed.'
         sys.exit(0)
 
-def produce(hostname, api_key, swarm_id, resource_id, feed_name):
+def produce(hostname, api_key, swarm_id, resource_id):
     global conn 
     conn = httplib.HTTPConnection(hostname)
-    sel = "/resources/%s/feeds/%s?swarm_id=%s"%(resource_id, feed_name, swarm_id)
-    conn.putrequest("PUT", sel)
+    sel = "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id)
+    print sel
+    print api_key
+    conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
     conn.endheaders()
@@ -55,20 +57,18 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "produce":
         signal.signal(signal.SIGINT, signal_handler)
-        opt_usage = "usage: \n  DATA | python %s SWARM_ID RESOURCE_ID FEED_NAME"%(sys.argv[1])
+        opt_usage = "usage: \n  DATA | python %s SWARM_ID RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *DATA: The data to produce in the Feed. Valid forms; \"echo 'data here'\", \"cat <filename>\"." \
                     +"\n  *SWARM_ID: The ID of the Swarm to produce to. This is a really long, unique identifier." \
-                    +"\n  *RESOURCE_ID: The ID of the Resource to produce with. This is the \"id\" field in the resource's listed JSON." \
-                    +"\n  *FEED_NAME: The name of the Feed you are producing."
+                    +"\n  *RESOURCE_ID: The ID of the Resource to produce with. This is the \"id\" field in the resource's listed JSON."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
-        if len(args) != 4:
+        if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
         resource_id = args[2]
-        feed_name = args[3]
-        produce(server_info["hostname"], keys["producer"], swarm_id, resource_id, feed_name)
+        produce(server_info["hostname"], keys['master'], swarm_id, resource_id)
     else:
         usage(sys.argv[0])
 
