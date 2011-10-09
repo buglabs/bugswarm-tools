@@ -12,7 +12,7 @@ def usage(script_name):
 
 def consume(hostname, api_key, swarm_id, resource_id):
     conn = httplib.HTTPConnection(hostname)
-    conn.request("GET", "/stream?swarm_id=%s&resouce_id=%s"%(swarm_id, resource_id), None, {"x-bugswarmapikey":api_key, "connection":"keep-alive"})
+    conn.request("GET", "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     while(1):
         txt = resp.read(1)
