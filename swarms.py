@@ -14,7 +14,10 @@ def create(hostname, api_key, name, description, public):
     conn = httplib.HTTPConnection(hostname)
     create_swarm = {"name": name, "description": description}
     if public != None:
-        create_swarm["public"] = public
+        if public == "true":
+            create_swarm["public"] = True
+        elif public == "false":
+            create_swarm["public"] = False
     create_swarm_json = json.dumps(create_swarm)
     conn.request("POST", "/swarms", create_swarm_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
@@ -30,21 +33,27 @@ def update(hostname, api_key, swarm_id, name, description, public):
     if description != None:
         update_swarm["description"] = description
     if public != None:
-        update_swarm["public"] = public
+        if public == "true":
+            update_swarm["public"] = True
+        elif public == "false":
+            update_swarm["public"] = False
     update_swarm_json = json.dumps(update_swarm)
     conn.request("PUT", "/swarms/%s"%(swarm_id), update_swarm_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
-    print txt
+    print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def destroy(hostname, api_key, swarm_id):
     conn = httplib.HTTPConnection(hostname)
     conn.request("DELETE", "/swarms/%s"%(swarm_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
-    txt = resp.read()
+    txt = resp.status
     conn.close()
-    print txt
+    if str(txt) == "204":
+        print "Great success! :)"
+    else:
+        print "Something went wrong! :("
 
 def list_user_swarms(hostname, api_key):
     conn = httplib.HTTPConnection(hostname)
@@ -69,10 +78,10 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: \n  %s NAME DESCRIPTION [options]"%(sys.argv[1])
-        opt_usage += "\n\n  *NAME: The name of the Swarm being created." \
-                    +"\n  *DESCRIPTION: The description of the Swarm being created."
+        opt_usage += "\n\n  *NAME: The name of the swarm being created." \
+                    +"\n  *DESCRIPTION: The description of the swarm being created."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
+        parser.add_option("-p", "--public", dest="public", help="Set whether the swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
         (options, args) = parser.parse_args()
         if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
@@ -82,11 +91,11 @@ def main():
         create(server_info["hostname"], keys["master"], name, description, options.public)     
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
-        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm being updated. This is a really long, unique identifier."
+        opt_usage += "\n\n  *SWARM_ID: The ID of the swarm being updated."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-n", "--name", dest="name", help="Set the Swarm's name", metavar="NAME")
-        parser.add_option("-d", "--description", dest="description", help="Set the Swarm's description", metavar="DESCRIPTION")
-        parser.add_option("-p", "--public", dest="public", help="Set whether the Swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
+        parser.add_option("-n", "--name", dest="name", help="Set the swarm's name", metavar="NAME")
+        parser.add_option("-d", "--description", dest="description", help="Set the swarm's description", metavar="DESCRIPTION")
+        parser.add_option("-p", "--public", dest="public", help="Set whether the swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
         (options, args) = parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
@@ -95,7 +104,7 @@ def main():
         update(server_info["hostname"], keys["master"], swarm_id, options.name, options.description, options.public)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
-        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm to destroy. This is a really long, unique identifier."
+        opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to destroy."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 2:
@@ -113,7 +122,7 @@ def main():
         list_user_swarms(server_info["hostname"], keys["master"])
     elif sys.argv[1] == "get_swarm_info":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
-        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm who's info is desired. This is a really long, unique indentifier."
+        opt_usage += "\n\n  *SWARM_ID: The ID of the swarm who's info is desired."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 2:

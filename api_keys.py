@@ -23,7 +23,7 @@ def create(hostname, user_id, password, key_type):
     txt = resp.read()
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
-    swarmtoolscore.set_keys(user_id, password)
+    swarmtoolscore.set_keys(hostname, user_id, password)
 
 def list(hostname, user_id, password):
     conn = httplib.HTTPConnection(hostname)
@@ -42,7 +42,7 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "create":
         opt_usage = "usage: \n  %s PASSWORD [options]"%(sys.argv[1])
-        opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
+        opt_usage += "\n\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', or 'consumer' (master is used by default)", metavar="KEY_TYPE")
         (options, args) =  parser.parse_args()
@@ -54,7 +54,7 @@ def main():
         create(server_info["hostname"], user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
-        opt_usage += "\n\n  *PASSWORD: Your BUGnet account password."
+        opt_usage += "\n\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 2:
