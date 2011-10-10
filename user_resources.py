@@ -21,7 +21,7 @@ def create(hostname, api_key, name, machine_type, description, position):
         create_resource["position"] = latlon
     create_resource_json = json.dumps(create_resource)
     conn = httplib.HTTPConnection(hostname)
-    conn.request("POST", "/resources", create_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("POST", "/resources", create_resource_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -42,7 +42,7 @@ def update(hostname, api_key, resource_id, name, machine_type, description, posi
         update_resource["position"] = latlon
     update_resource_json = json.dumps(update_resource)
     conn = httplib.HTTPConnection(hostname)
-    conn.request("PUT", "/resources/%s"%(resource_id), update_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("PUT", "/resources/%s"%(resource_id), update_resource_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()

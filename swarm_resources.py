@@ -14,7 +14,7 @@ def add(hostname, api_key, swarm_id, resource_id, resource_type):
     add_resource = {"resource_id": resource_id, "resource_type": resource_type}
     add_resource_json = json.dumps(add_resource)
     conn = httplib.HTTPConnection(hostname)
-    conn.request("POST", "/swarms/%s/resources"%(swarm_id), add_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("POST", "/swarms/%s/resources"%(swarm_id), add_resource_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -27,7 +27,7 @@ def remove(hostname, api_key, swarm_id, resource_id, resource_type):
     remove_resource = {"resource_id": resource_id, "resource_type": resource_type}
     remove_resource_json = json.dumps(remove_resource)
     conn = httplib.HTTPConnection(hostname)
-    conn.request("DELETE", "/swarms/%s/resources"%(swarm_id), remove_resource_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("DELETE", "/swarms/%s/resources"%(swarm_id), remove_resource_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()

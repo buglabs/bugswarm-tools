@@ -19,7 +19,7 @@ def create(hostname, api_key, name, description, public):
         elif public == "false":
             create_swarm["public"] = False
     create_swarm_json = json.dumps(create_swarm)
-    conn.request("POST", "/swarms", create_swarm_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("POST", "/swarms", create_swarm_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -38,7 +38,7 @@ def update(hostname, api_key, swarm_id, name, description, public):
         elif public == "false":
             update_swarm["public"] = False
     update_swarm_json = json.dumps(update_swarm)
-    conn.request("PUT", "/swarms/%s"%(swarm_id), update_swarm_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("PUT", "/swarms/%s"%(swarm_id), update_swarm_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()

@@ -27,10 +27,9 @@ def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "init":
-        opt_usage = "usage: \n  %s USER_ID PASSWORD [HOSTNAME]"%(sys.argv[1])
-        opt_usage += "\n\n  *USER_ID: Your BUGnet account User ID." \
-                    +"\n  *PASSWORD: Your BUGnet account password." \
-                    +"\n  *HOSTNAME: (Optional) Hostname of bugswarm server."
+        opt_usage = "usage: \n  %s USER_ID PASSWORD"%(sys.argv[1])
+        opt_usage += "\n\n  *USER_ID: Your Bug Labs account user ID." \
+                    +"\n  *PASSWORD: Your Bug Labs account password." \
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) < 3:

@@ -16,7 +16,7 @@ def send(hostname, api_key, swarm_id, to, resource_id, resource_type, descriptio
     if description != None:
         invitation["description"] = description
     invitation_json = json.dumps(invitation)
-    conn.request("POST", "/swarms/%s/invitations"%(swarm_id), invitation_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("POST", "/swarms/%s/invitations"%(swarm_id), invitation_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -48,7 +48,7 @@ def respond(hostname, api_key, resource_id, invitation_id, status):
         sys.exit()
     response = {"status": status}
     response_json = json.dumps(response)
-    conn.request("PUT", "/resources/%s/invitations/%s"%(resource_id, invitation_id), response_json, {"x-bugswarmapikey":api_key, "content-type":"application/json"})
+    conn.request("PUT", "/resources/%s/invitations/%s"%(resource_id, invitation_id), response_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
