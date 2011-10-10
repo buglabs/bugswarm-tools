@@ -30,3 +30,7 @@ For each of the python scripts in the root of the bugswarm-tools repository, sim
 This will provide you with a list of potential methods you can use with the given script.
 
 Running `./SCRIPT_NAME METHOD_NAME --help` will provide you with the usage information for the given method.
+
+**Note:** The configuration portion of BUGswarm Tools (all scripts with the exception of `consume.py` and `produce.py`)
+have a 1:1 relationship with the methods documented at the [Developer Portal](http://developer.bugswarm.net/configuration_api.html).
+Developers may find it useful to consult that documentation when using BUGswarm Tools.
