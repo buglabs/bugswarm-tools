@@ -57,10 +57,10 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "produce":
         signal.signal(signal.SIGINT, signal_handler)
-        opt_usage = "usage: \n  DATA | python %s SWARM_ID RESOURCE_ID"%(sys.argv[1])
-        opt_usage += "\n\n  *DATA: The data to produce in the Feed. Valid forms; \"echo 'data here'\", \"cat <filename>\"." \
-                    +"\n  *SWARM_ID: The ID of the Swarm to produce to. This is a really long, unique identifier." \
-                    +"\n  *RESOURCE_ID: The ID of the Resource to produce with. This is the \"id\" field in the resource's listed JSON."
+        opt_usage = "usage: \n  DATA | ./produce.py %s SWARM_ID RESOURCE_ID"%(sys.argv[1])
+        opt_usage += "\n\n  *DATA: The data to produce in the feed. Valid forms; \"echo 'DATA'\", \"cat FILENAME\"." \
+                    +"\n  *SWARM_ID: The ID of the swarm to produce to." \
+                    +"\n  *RESOURCE_ID: The ID of the resource to produce with."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 3:

@@ -27,8 +27,8 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "consume":
         opt_usage = "usage: \n  %s SWARM_ID RESOURCE_ID"%(sys.argv[1])
-        opt_usage += "\n\n  *SWARM_ID: The ID of the Swarm to consume. This is a really long, unique identifier."
-        opt_usage += "\n\n  *RESOURCE_ID: The ID of the Resource to use for consumption. This is another really long, unique identifier."
+        opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to consume." \
+                    +"\n  *RESOURCE_ID: The ID of the resource to use for consumption."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 3:
