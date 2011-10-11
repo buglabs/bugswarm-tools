@@ -21,10 +21,9 @@ def get_user_info():
 def get_keys():
     config = ConfigParser.ConfigParser()
     raw_data = config.read("%s/swarm.cfg"%(my_working_directory))
-    master = config.get("Keys", "master")
-    consumer = config.get("Keys", "consumer")
-    producer = config.get("Keys", "producer")
-    return {"master" : master, "consumer": consumer, "producer": producer}
+    configuration = config.get("Keys", "configuration")
+    participation = config.get("Keys", "participation")
+    return {"configuration": configuration, "participation": participation}
 
 def set_server_info(hostname):
     config = ConfigParser.ConfigParser()
@@ -48,9 +47,8 @@ def set_keys(hostname, user_id, password):
     resp = get_keys_from_server(hostname, user_id, password)
     if resp.status == 404:
         print "Status is 404"
-        create_key(hostname, user_id, password, "master")
-        create_key(hostname, user_id, password, "producer")
-        create_key(hostname, user_id, password, "consumer")
+        create_key(hostname, user_id, password, "configuration")
+        create_key(hostname, user_id, password, "participation")
         resp = get_keys_from_server(hostname, user_id, password)
     txt = resp.read()
     if resp.status >= 400:
@@ -62,15 +60,12 @@ def set_keys(hostname, user_id, password):
         key_value = key_obj["key"]
         config.set("Keys", key_type, key_value)
 
-    if config.has_option("Keys", "master") == False:
-        key_obj = create_key(user_id, password, "master")
-        config.set("Keys", "master", key_obj["apikey"])
-    if config.has_option("Keys", "producer") == False:
-        key_obj = create_key(user_id, password, "producer")
-        config.set("Keys", "producer", key_obj["apikey"])
-    if config.has_option("Keys", "consumer") == False:
-        key_obj = create_key(user_id, password, "consumer")
-        config.set("Keys", "consumer", key_obj["apikey"])
+    if config.has_option("Keys", "configuration") == False:
+        key_obj = create_key(user_id, password, "configuration")
+        config.set("Keys", "configuration", key_obj["apikey"])
+    if config.has_option("Keys", "participation") == False:
+        key_obj = create_key(user_id, password, "participation")
+        config.set("Keys", "participation", key_obj["apikey"])
 
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
