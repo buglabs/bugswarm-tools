@@ -66,7 +66,7 @@ Options:
 
 This usage output shows us that, in order to use this method, we must give it our Bug Labs password as an argument. Additionally,
 we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. While the master key is 
-created by default, we will use this option to show how other options in the future may be used.
+created by default, we will use this option to show how other options may be used in the future.
 
 So to create our master API key, we will run `./api_keys.py create PASSWORD -t master`, where 'PASSWORD' will be filled in
 with your Bug Labs account password. Running this command produces the following output:
