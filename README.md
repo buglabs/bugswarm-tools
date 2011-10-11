@@ -6,15 +6,16 @@ the need for curl commands and allows developers to quickly and easily start con
 
 ##Installation
 
+Using the username and password from your Bug Labs account, run the following shell commands.
+
 ```shell
 git clone git@github.com:buglabs/bugswarm-tools.git
 cd bugswarm-tools
 ./init.py init USERNAME PASSWORD
 ```
 
-For the USERNAME and PASSWORD, use the credentials from your Bug Labs account.
-
-If you are running zsh, you may want to add the following function to your .zshrc:
+If you are running zsh, you may want to add the following function to your .zshrc, allowing you to 
+run commands like `swarm user_resources create` from anywhere, instead of `/path/to/user_resources.py create`:
 
 ```javascript
 function swarm() {
@@ -22,15 +23,60 @@ function swarm() {
 }
 ```
 
-This will let you run commands like `swarm user_resources create` from anywhere, instead of `/path/to/user_resources.py create`.
-
 ##Usage
 
-For each of the python scripts in the root of the bugswarm-tools repository, simply run `./SCRIPT_NAME` without any arguments or `./SCRIPT_NAME --help` to view the usage.
-This will provide you with a list of potential methods you can use with the given script.
+For each of the python scripts in the root of the bugswarm-tools repository, simply run `./SCRIPT_NAME` without any 
+arguments or `./SCRIPT_NAME --help` to view the usage. This will provide you with a list of potential methods you 
+can use with the given script.
 
 Running `./SCRIPT_NAME METHOD_NAME --help` will provide you with the usage information for the given method.
 
 **Note:** The configuration portion of BUGswarm Tools (all scripts with the exception of `consume.py` and `produce.py`)
-have a 1:1 relationship with the methods documented at the [Developer Portal](http://developer.bugswarm.net/configuration_api.html).
+has a 1:1 relationship with the methods documented at the [Developer Portal](http://developer.bugswarm.net/configuration_api.html).
 Developers may find it useful to consult that documentation when using BUGswarm Tools.
+
+###Example
+
+Let's say you want to create a new master API key. By running `./api_keys.py` with no arguments or 
+`./api_keys.py --help`, we are given the following usage output:
+
+```
+./api_keys.py [create|list] 
+
+Use './api_keys.py [method] --help' for a method's usage and options.
+```
+
+This output lets us know that there are two methods we can use with this script, 'create' and 'list'. Since this is the
+'api_keys.py' script, it is safe to assume that these methods refer to creating and listing a user's API keys. Now, since
+we want to create an API key, we will run `./api_keys.py create --help` to view the usage for the 'create' method. Doing
+so produces the following output:
+
+```
+Usage: 
+  create PASSWORD [options]
+
+  *PASSWORD: Your Bug Labs account password.
+
+Options:
+  -h, --help            show this help message and exit
+  -t KEY_TYPE, --type=KEY_TYPE
+                        Specify the type of API key; 'master', 'producer', or
+                        'consumer' (master is used by default)
+```
+
+This usage output shows us that, in order to use this method, we must give it our Bug Labs password as an argument. Additionally,
+we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. While the master key is 
+created by default, we will use this option to show how other options in the future may be used.
+
+So to create our master API key, we will run `./api_keys.py create PASSWORD -t master`, where 'PASSWORD' will be filled in
+with your Bug Labs account password. Running this command produces the following output:
+
+```javascript
+{
+    "apikey": "959e5b5cfdd5c832bc2641641a31b811cc52e480", 
+    "type": "master"
+}
+```
+
+Well there you go. We just created our master API key. Using the remaining scripts and methods in the same way will
+allow you to quickly and easily develop on the BUGswarm platform. Good luck!
