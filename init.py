@@ -29,7 +29,7 @@ def main():
     elif sys.argv[1] == "init":
         opt_usage = "usage: \n  %s USER_ID PASSWORD"%(sys.argv[1])
         opt_usage += "\n\n  *USER_ID: Your Bug Labs account user ID." \
-                    +"\n  *PASSWORD: Your Bug Labs account password." \
+                    +"\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) < 3:
