@@ -61,10 +61,10 @@ def set_keys(hostname, user_id, password):
         config.set("Keys", key_type, key_value)
 
     if config.has_option("Keys", "configuration") == False:
-        key_obj = create_key(user_id, password, "configuration")
+        key_obj = create_key(hostname, user_id, password, "configuration")
         config.set("Keys", "configuration", key_obj["apikey"])
     if config.has_option("Keys", "participation") == False:
-        key_obj = create_key(user_id, password, "participation")
+        key_obj = create_key(hostname, user_id, password, "participation")
         config.set("Keys", "participation", key_obj["apikey"])
 
     with open("swarm.cfg", "wb") as configfile:

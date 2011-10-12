@@ -68,7 +68,7 @@ def main():
             sys.exit()
         swarm_id = args[1]
         resource_id = args[2]
-        produce(server_info["hostname"], keys['master'], swarm_id, resource_id)
+        produce(server_info["hostname"], keys['participation'], swarm_id, resource_id)
     else:
         usage(sys.argv[0])
 

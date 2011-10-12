@@ -36,7 +36,7 @@ def main():
             sys.exit()
         swarm_id = args[1]
         resource_id = args[2]
-        consume(server_info["hostname"], keys["consumer"], swarm_id, resource_id)
+        consume(server_info["hostname"], keys["participation"], swarm_id, resource_id)
     else:
         usage(sys.argv[0])
 main()
