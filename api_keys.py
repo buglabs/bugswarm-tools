@@ -25,7 +25,7 @@ def create(hostname, user_id, password, key_type):
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
     swarmtoolscore.set_keys(hostname, user_id, password)
 
-def list(hostname, user_id, password):
+def list(hostname, user_id, password, key_type):
     conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
