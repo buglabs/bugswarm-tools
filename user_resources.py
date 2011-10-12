@@ -101,7 +101,7 @@ def main():
             sys.exit()
         name = args[1]
         machine_type = args[2]
-        create(server_info["hostname"], keys["master"], name, machine_type, options.description, options.position)
+        create(server_info["hostname"], keys["configuration"], name, machine_type, options.description, options.position)
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s RESOURCE_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource to update."
@@ -115,7 +115,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        update(server_info["hostname"], keys["master"], resource_id, options.name, options.machine_type, options.description, options.position)
+        update(server_info["hostname"], keys["configuration"], resource_id, options.name, options.machine_type, options.description, options.position)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource to destroy."
@@ -125,7 +125,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        destroy(server_info["hostname"], keys["master"], resource_id)
+        destroy(server_info["hostname"], keys["configuration"], resource_id)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -133,7 +133,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_resources(server_info["hostname"], keys["master"])
+        list_user_resources(server_info["hostname"], keys["configuration"])
     elif sys.argv[1] == "get_resource_info":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource who's info is desired."
@@ -143,7 +143,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        get_resource_info(server_info["hostname"], keys["master"], resource_id)
+        get_resource_info(server_info["hostname"], keys["configuration"], resource_id)
     elif sys.argv[1] == "list_swarms_with_resource":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource. The swarms that the resource is a member of will be listed."
@@ -153,7 +153,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        list_swarms_with_resource(server_info["hostname"], keys["master"], resource_id)
+        list_swarms_with_resource(server_info["hostname"], keys["configuration"], resource_id)
     else:
         usage(sys.argv[0])
 main()

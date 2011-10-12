@@ -29,7 +29,10 @@ def list(hostname, user_id, password):
     conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
-    conn.request("GET", "/keys", None, {"Authorization":auth_header})
+    if (key_type != None):
+        conn.request("GET", "/keys/" + key_type, None, ("Authorization":auth_header})
+    else:
+        conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
@@ -44,7 +47,7 @@ def main():
         opt_usage = "usage: \n  %s PASSWORD [options]"%(sys.argv[1])
         opt_usage += "\n\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key; 'master', 'producer', or 'consumer' (master is used by default)", metavar="KEY_TYPE")
+        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key. Valid types; 'configuration', 'participation' (configuration is created by default).", metavar="KEY_TYPE")
         (options, args) =  parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
@@ -53,16 +56,17 @@ def main():
         user_info = swarmtoolscore.get_user_info()
         create(server_info["hostname"], user_info["user_id"], password, options.key_type)
     elif sys.argv[1] == "list":
-        opt_usage = "usage: \n  %s PASSWORD"%(sys.argv[1])
+        opt_usage = "usage: \n  %s PASSWORD [options]"%(sys.argv[1])
         opt_usage += "\n\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
+        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key. Valid types; 'configuration', 'participation' (configuration is created by default).", metavar="KEY_TYPE")
         (options, args) = parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         password = args[1]
         user_info = swarmtoolscore.get_user_info()
-        list(server_info["hostname"], user_info["user_id"], password)
+        list(server_info["hostname"], user_info["user_id"], password, options.key_type)
     else:
         usage(sys.argv[0])
 main()

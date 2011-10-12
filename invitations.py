@@ -75,7 +75,7 @@ def main():
         to = args[2]
         resource_id = args[3]
         resource_type = args[4]
-        send(server_info["hostname"], keys["master"], swarm_id, to, resource_id, resource_type, options.description)     
+        send(server_info["hostname"], keys["configuration"], swarm_id, to, resource_id, resource_type, options.description)     
     elif sys.argv[1] == "list_sent_invitations":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm who's associated invitations will be listed."
@@ -85,7 +85,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        list_sent_invitations(server_info["hostname"], keys["master"], swarm_id)
+        list_sent_invitations(server_info["hostname"], keys["configuration"], swarm_id)
     elif sys.argv[1] == "list_received_invitations":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -94,7 +94,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_received_invitations(server_info["hostname"], keys["master"], options.resource_id)
+        list_received_invitations(server_info["hostname"], keys["configuration"], options.resource_id)
     elif sys.argv[1] == "respond":
         opt_usage = "usage: \n  %s RESOURCE_ID INVITATION_ID STATUS"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource who's invitation is being responded to." \
@@ -108,7 +108,7 @@ def main():
         resource_id = args[1]
         invitation_id = args[2]
         status = args[3]
-        respond(server_info["hostname"], keys["master"], resource_id, invitation_id, status)
+        respond(server_info["hostname"], keys["configuration"], resource_id, invitation_id, status)
     else:
         usage(sys.argv[0])
 main()

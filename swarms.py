@@ -88,7 +88,7 @@ def main():
             sys.exit()
         name = args[1]
         description = args[2]
-        create(server_info["hostname"], keys["master"], name, description, options.public)     
+        create(server_info["hostname"], keys["configuration"], name, description, options.public)     
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm being updated."
@@ -101,7 +101,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        update(server_info["hostname"], keys["master"], swarm_id, options.name, options.description, options.public)
+        update(server_info["hostname"], keys["configuration"], swarm_id, options.name, options.description, options.public)
     elif sys.argv[1] == "destroy":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to destroy."
@@ -111,7 +111,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        destroy(server_info["hostname"], keys["master"], swarm_id)
+        destroy(server_info["hostname"], keys["configuration"], swarm_id)
     elif sys.argv[1] == "list":
         opt_usage = "usage: \n  %s"%(sys.argv[1])
         parser = OptionParser(usage = opt_usage)
@@ -119,7 +119,7 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_swarms(server_info["hostname"], keys["master"])
+        list_user_swarms(server_info["hostname"], keys["configuration"])
     elif sys.argv[1] == "get_swarm_info":
         opt_usage = "usage: \n  %s SWARM_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm who's info is desired."
@@ -129,7 +129,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
-        get_swarm_info(server_info["hostname"], keys["master"], swarm_id)
+        get_swarm_info(server_info["hostname"], keys["configuration"], swarm_id)
     else:
         usage(sys.argv[0])
 main()
