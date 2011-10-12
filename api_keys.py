@@ -30,7 +30,7 @@ def list(hostname, user_id, password):
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     if (key_type != None):
-        conn.request("GET", "/keys/" + key_type, None, ("Authorization":auth_header})
+        conn.request("GET", "/keys/" + key_type, None, {"Authorization":auth_header})
     else:
         conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
