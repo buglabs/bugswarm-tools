@@ -39,11 +39,7 @@ def remove(hostname, api_key, swarm_id, resource_id, resource_type):
 def list_swarm_resources(hostname, api_key, swarm_id, resource_type):
     conn = httplib.HTTPConnection(hostname)
     if resource_type != None:
-        if resource_type == "producer" or resource_type == "consumer" or resource_type == "both":
-            conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, resource_type), None, {"x-bugswarmapikey":api_key})
-        else:
-            print "Invalid type. Option must be 'producer', 'consumer', or 'both'."
-            sys.exit()
+        conn.request("GET", "/swarms/%s/resources?type=%s"%(swarm_id, resource_type), None, {"x-bugswarmapikey":api_key})
     else:
         conn.request("GET", "/swarms/%s/resources"%(swarm_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -60,7 +56,7 @@ def main():
         opt_usage = "usage: \n  %s SWARM_ID RESOURCE_ID RESOURCE_TYPE"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to add to." \
                     +"\n  *RESOURCE_ID: The ID of the resource to add." \
-                    +"\n  *RESOURCE_TYPE: The type of the resource to add. Valid types; 'producer', 'consumer', 'both'."
+                    +"\n  *RESOURCE_TYPE: The type of the resource to add. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 4:
@@ -74,7 +70,7 @@ def main():
         opt_usage = "usage: \n  %s SWARM_ID RESOURCE_ID RESOURCE_TYPE"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the rwarm remove from." \
                     +"\n  *RESOURCE_ID: The ID of the resource to remove." \
-                    +"\n  *RESOURCE_TYPE: The type of the resource to remove. Valid types; 'producer', 'consumer', 'both'."
+                    +"\n  *RESOURCE_TYPE: The type of the resource to remove. Valid types; 'producer', 'consumer'."
         parser = OptionParser(usage = opt_usage)
         (options, args) = parser.parse_args()
         if len(args) != 4:
@@ -88,7 +84,7 @@ def main():
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm who's resources will be listed."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer', 'both'.", metavar="TYPE")
+        parser.add_option("-t", "--type", dest="type", help="Limit the list. Valid types; 'producer', 'consumer'.", metavar="TYPE")
         (options, args) = parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
