@@ -37,8 +37,9 @@ Developers may find it useful to consult that documentation when using BUGswarm 
 
 ###Example
 
-Let's say you want to create a new master API key. By running `./api_keys.py` with no arguments or 
-`./api_keys.py --help`, we are given the following usage output:
+Let's say you want to create a new configuration API key (either because you don't have one yet or you want to 
+replace your current key with a fresh one). By running `./api_keys.py` with no arguments or `./api_keys.py --help`, 
+we are given the following usage output:
 
 ```
 ./api_keys.py [create|list] 
@@ -60,23 +61,24 @@ Usage:
 Options:
   -h, --help            show this help message and exit
   -t KEY_TYPE, --type=KEY_TYPE
-                        Specify the type of API key; 'master', 'producer', or
-                        'consumer' (master is used by default)
+                        Specify the type of API key. Valid types;
+                        'configuration', 'participation' (configuration is
+                        created by default).
 ```
 
 This usage output shows us that, in order to use this method, we must give it our Bug Labs password as an argument. Additionally,
-we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. While the master key is 
+we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. While the configuration key is 
 created by default, we will use this option to show how other options may be used in the future.
 
-So, to create our master API key, we will run `./api_keys.py create PASSWORD -t master`, where 'PASSWORD' will be filled in
+So, to create our configuration API key, we will run `./api_keys.py create PASSWORD -t configuration`, where 'PASSWORD' will be filled in
 with your Bug Labs account password. Running this command produces the following output:
 
 ```javascript
 {
     "apikey": "959e5b5cfdd5c832bc2641641a31b811cc52e480", 
-    "type": "master"
+    "type": "configuration"
 }
 ```
 
-Well there you go. We just created our master API key. Using the remaining scripts and methods in the same way will
+Well there you go. We just created our configuration API key. Using the remaining scripts and methods in the same way will
 allow you to quickly and easily develop on the BUGswarm platform. Good luck!
