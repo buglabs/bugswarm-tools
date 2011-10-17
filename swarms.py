@@ -53,6 +53,7 @@ def destroy(hostname, api_key, swarm_id):
     if str(txt) == "204":
         print "Great success! :)"
     else:
+        print txt
         print "Something went wrong! :("
 
 def list_user_swarms(hostname, api_key):

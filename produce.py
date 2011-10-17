@@ -7,6 +7,9 @@ import os
 import time
 import signal
 
+conn = None;
+
+
 def usage(script_name):
     print "%s [produce] \n"%(script_name)
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
@@ -19,14 +22,13 @@ def signal_handler(signal, frame):
         sys.exit(0)
 
 def produce(hostname, api_key, swarm_id, resource_id):
-    global conn 
+    global conn
     conn = httplib.HTTPConnection(hostname)
     sel = "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id)
-    print sel
-    print api_key
     conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
+    conn.putheader("connection", "keep-alive")
     conn.endheaders()
 
     #Sleep required to allow the swarm server time to respond with header
@@ -47,7 +49,11 @@ def produce(hostname, api_key, swarm_id, resource_id):
         except Exception as e:
             print "some sort of problem", e
 
+    print "sleeping 5"
+    time.sleep(5)
     conn.send("0\r\n")
+    print "sleeping 5 again"
+    time.sleep(5)
     conn.close()
 
 def main():
