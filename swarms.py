@@ -4,13 +4,14 @@ from lib import swarmtoolscore
 import sys
 import httplib
 import json
+import ast
 
 def usage(script_name):
     print "%s [create|update|destroy|list|get_swarm_info] \n"%(script_name)
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
-def create(hostname, api_key, name, description, public):
+def create(hostname, api_key, name, description, public, resources):
     conn = httplib.HTTPConnection(hostname)
     create_swarm = {"name": name, "description": description}
     if public != None:
@@ -18,6 +19,13 @@ def create(hostname, api_key, name, description, public):
             create_swarm["public"] = True
         elif public == "false":
             create_swarm["public"] = False
+    if resources != None:
+        resources_dict = ast.literal_eval(resources)
+        resources_list = []
+        for key, value in resources_dict.iteritems():
+            resource_dict = {"resource_id": key, "resource_type": value}
+            resources_list.append(resource_dict)
+        create_swarm["resources"] = resources_list
     create_swarm_json = json.dumps(create_swarm)
     conn.request("POST", "/swarms", create_swarm_json, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -83,13 +91,14 @@ def main():
                     +"\n  *DESCRIPTION: The description of the swarm being created."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-p", "--public", dest="public", help="Set whether the swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
+        parser.add_option("-r", "--resources", dest="resources", help="Input resources you wish to add to the swarm by default. Format the resources as a dictionary of 'resource_id:resource_type' key:value pairs.", metavar="RESOURCES")
         (options, args) = parser.parse_args()
         if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         name = args[1]
         description = args[2]
-        create(server_info["hostname"], keys["configuration"], name, description, options.public)     
+        create(server_info["hostname"], keys["configuration"], name, description, options.public, options.resources)     
     elif sys.argv[1] == "update":
         opt_usage = "usage: \n  %s SWARM_ID [options]"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm being updated."
