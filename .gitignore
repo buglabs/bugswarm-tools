@@ -1,2 +1,4 @@
 *.pyc
 swarm.cfg.project
+.project
+swarm.cfg
