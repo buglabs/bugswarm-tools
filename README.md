@@ -61,14 +61,14 @@ Usage:
 Options:
   -h, --help            show this help message and exit
   -t KEY_TYPE, --type=KEY_TYPE
-                        Specify the type of API key. Valid types;
-                        'configuration', 'participation' (configuration is
-                        created by default).
+                        Specify the type of API key you wish to create. Valid
+                        types; 'configuration', 'participation' (both keys are
+                        created if no type specified).
 ```
 
 This usage output shows us that, in order to use this method, we must give it our Bug Labs password as an argument. Additionally,
-we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. While the configuration key is 
-created by default, we will use this option to show how other options may be used in the future.
+we may choose to use the 'KEY_TYPE' option to specify which type of key we wish to create. Since both keys are created
+by default and we only wish to create the configuration key, we will use this option to specify the key type.
 
 So, to create our configuration API key, we will run `./api_keys.py create PASSWORD -t configuration`, where 'PASSWORD' will be filled in
 with your Bug Labs account password. Running this command produces the following output:
