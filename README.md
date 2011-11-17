@@ -75,9 +75,13 @@ with your Bug Labs account password. Running this command produces the following
 
 ```javascript
 {
-    "apikey": "959e5b5cfdd5c832bc2641641a31b811cc52e480", 
-    "type": "configuration"
+    "created_at": "2011-11-17T16:09:54.890Z", 
+    "key": "31ca73d1cfcda8d70c348a577afc1862c49b1a16", 
+    "status": "active", 
+    "type": "configuration", 
+    "user_id": "barberdt"
 }
+
 ```
 
 Well there you go. We just created our configuration API key. Using the remaining scripts and methods in the same way will
