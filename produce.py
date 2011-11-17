@@ -49,10 +49,8 @@ def produce(hostname, api_key, swarm_id, resource_id):
         except Exception as e:
             print "some sort of problem", e
 
-    print "sleeping 5"
     time.sleep(5)
     conn.send("0\r\n")
-    print "sleeping 5 again"
     time.sleep(5)
     conn.close()
 

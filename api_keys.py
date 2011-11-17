@@ -47,7 +47,7 @@ def main():
         opt_usage = "usage: \n  %s PASSWORD [options]"%(sys.argv[1])
         opt_usage += "\n\n  *PASSWORD: Your Bug Labs account password."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key. Valid types; 'configuration', 'participation' (configuration is created by default).", metavar="KEY_TYPE")
+        parser.add_option("-t", "--type", dest="key_type", help="Specify the type of API key you wish to create. Valid types; 'configuration', 'participation' (both keys are created if no type specified).", metavar="KEY_TYPE")
         (options, args) =  parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
