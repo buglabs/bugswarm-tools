@@ -1,6 +1,6 @@
 #BUGswarm Tools
 
-BUGswarm Tools is a simple set of python scripts that utilize http requests to wrap up both the [Configuration](http://developer.bugswarm.net/configuration_api.html)
+BUGswarm Tools is a simple set of python scripts that utilizes http requests to wrap up both the [Configuration](http://developer.bugswarm.net/configuration_api.html)
 and [Participation](http://developer.bugswarm.net/participation_api.html) APIs of BUGswarm in an effort to minimize the time spent using said APIs. BUGswarm tools eliminates
 the need for curl commands and allows developers to quickly and easily start configuring and participating in swarms. 
 
