@@ -6,7 +6,7 @@ import httplib
 import json
 
 def usage(script_name):
-    print "%s [create|update|destroy|list|get_resource_info|list_swarms_with_resource] \n"%(script_name)
+    print "%s [create|update|destroy|list|get_info|list_swarms] \n"%(script_name)
     print "Use '%s [method] --help for a method's usage and options."%(script_name)
     sys.exit()
 
@@ -59,7 +59,7 @@ def destroy(hostname, api_key, resource_id):
     else:
         print "Something went wrong! :("
     
-def list_user_resources(hostname, api_key):
+def list_resources(hostname, api_key):
     conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources", None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -67,7 +67,7 @@ def list_user_resources(hostname, api_key):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def get_resource_info(hostname, api_key, resource_id):
+def get_info(hostname, api_key, resource_id):
     conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources/%s"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -75,7 +75,7 @@ def get_resource_info(hostname, api_key, resource_id):
     conn.close()
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
-def list_swarms_with_resource(hostname, api_key, resource_id):
+def list_swarms(hostname, api_key, resource_id):
     conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/resources/%s/swarms"%(resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -133,8 +133,8 @@ def main():
         if len(args) != 1:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
-        list_user_resources(server_info["hostname"], keys["configuration"])
-    elif sys.argv[1] == "get_resource_info":
+        list_resources(server_info["hostname"], keys["configuration"])
+    elif sys.argv[1] == "get_info":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource who's info is desired."
         parser = OptionParser(usage = opt_usage)
@@ -143,8 +143,8 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        get_resource_info(server_info["hostname"], keys["configuration"], resource_id)
-    elif sys.argv[1] == "list_swarms_with_resource":
+        get_info(server_info["hostname"], keys["configuration"], resource_id)
+    elif sys.argv[1] == "list_swarms":
         opt_usage = "usage: \n  %s RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *RESOURCE_ID: The ID of the resource. The swarms that the resource is a member of will be listed."
         parser = OptionParser(usage = opt_usage)
@@ -153,7 +153,7 @@ def main():
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         resource_id = args[1]
-        list_swarms_with_resource(server_info["hostname"], keys["configuration"], resource_id)
+        list_swarms(server_info["hostname"], keys["configuration"], resource_id)
     else:
         usage(sys.argv[0])
 main()
