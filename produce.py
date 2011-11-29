@@ -28,19 +28,31 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
     conn.endheaders()
-
+    
     #Sleep required to allow the swarm server time to respond with header
     time.sleep(1)
+
+    #Send a blank message to open the connection
+    stripped_msg = '{"message": {"to": ["' + swarm_id + '"], "payload":}}'
+    size = hex(len(stripped_msg))[2:] + "\r\n"
+    chunk = stripped_msg + "\r\n"
+    conn.send(size+chunk)
+
+    #Execute further messages
     if wrap == False:
         while True:
             try:
                 msg = sys.stdin.readline()
-                if (len(msg) < 1):
+                if msg == "\n":
+                    stripped_msg = '{"message": {"to": ["' + swarm_id + '"], "payload":}}'
+                elif (len(msg) < 1):
                     break
-                stripped_msg = msg.strip()
+                else:
+                    stripped_msg = msg.strip()
                 size = hex(len(stripped_msg))[2:] + "\r\n"
                 chunk = stripped_msg + "\r\n"
-                conn.send(size+chunk)
+                print size+chunk
+                conn.send(size+chunk)                
             except Exception as e:
                 print "some sort of problem", e
     else:
@@ -49,7 +61,8 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
                 payload = sys.stdin.readline()
                 if (len(payload) < 1):
                     break
-                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + payload + '}}'
+                stripped_payload = payload.strip()
+                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
                 size = hex(len(msg))[2:] + "\r\n"
                 chunk = msg + "\r\n"
                 conn.send(size+chunk)
