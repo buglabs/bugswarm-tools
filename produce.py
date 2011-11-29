@@ -27,11 +27,9 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
     conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
-    conn.putheader("connection", "keep-alive")
     conn.endheaders()
 
     #Sleep required to allow the swarm server time to respond with header
-    #TODO - actually wait until header is returned
     time.sleep(1)
     if wrap == False:
         while True:
@@ -43,14 +41,8 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
                 size = hex(len(stripped_msg))[2:] + "\r\n"
                 chunk = stripped_msg + "\r\n"
                 conn.send(size+chunk)
-                #conn.send flushes the pipe, so we need both the size and chunk to go out at the same time...                
             except Exception as e:
                 print "some sort of problem", e
-
-        time.sleep(5)
-        conn.send("0\r\n")
-        time.sleep(5)
-        conn.close()
     else:
         while True:
             try:
@@ -63,11 +55,6 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
                 conn.send(size+chunk)
             except Exception as e:
                 print "some sort of problem", e
-
-        time.sleep(5)
-        conn.send("0\r\n")
-        time.sleep(5)
-        conn.close()
 
 def main():
     server_info = swarmtoolscore.get_server_info()
