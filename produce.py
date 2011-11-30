@@ -41,7 +41,7 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
             try:
                 msg = sys.stdin.readline()
                 if msg == "\n":
-                    stripped_msg = '{"message": {"to": ["' + swarm_id + '"], "payload":}}'
+                    stripped_msg = '\n\n'
                 elif (len(msg) < 1):
                     break
                 else:
