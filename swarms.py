@@ -23,8 +23,14 @@ def create(hostname, api_key, name, description, public, resources):
         resources_dict = ast.literal_eval(resources)
         resources_list = []
         for key, value in resources_dict.iteritems():
-            resource_dict = {"resource_id": key, "resource_type": value}
-            resources_list.append(resource_dict)
+            if value == "both":
+                producer_dict = {"resource_id": key, "resource_type": "producer"}
+                consumer_dict = {"resource_id": key, "resource_type": "consumer"}
+                resources_list.append(producer_dict)
+                resources_list.append(consumer_dict)
+            else:
+                add_resource_dict = {"resource_id": key, "resource_type": value}
+                resources_list.append(add_resource_dict)
         create_swarm["resources"] = resources_list
     create_swarm_json = json.dumps(create_swarm)
     conn.request("POST", "/swarms", create_swarm_json, {"x-bugswarmapikey":api_key})
