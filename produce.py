@@ -51,7 +51,6 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
                     stripped_msg = msg.strip()
                 size = hex(len(stripped_msg))[2:] + "\r\n"
                 chunk = stripped_msg + "\r\n"
-                print size+chunk
                 conn.send(size+chunk)                
             except Exception as e:
                 print "some sort of problem", e
