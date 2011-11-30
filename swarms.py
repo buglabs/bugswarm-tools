@@ -134,7 +134,7 @@ def main():
                     +"\n  *DESCRIPTION: The description of the swarm being created."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-p", "--public", dest="public", help="Set whether the swarm is public or not. Valid types; 'true', 'false'.", metavar="PUBLIC")
-        parser.add_option("-r", "--resources", dest="resources", help="Input resources you wish to add to the swarm by default. Format the resources as a dictionary of \"resource_id\":\"resource_type\" key:value pairs. Example: '{\"c35b44419f7b2717f25c6022d04af72a492cd892\":\"consumer\"}'", metavar="RESOURCES")
+        parser.add_option("-r", "--resources", dest="resources", help="Input resources you wish to add to the swarm by default. Format the resources as a dictionary of \"resource_id\":\"resource_type\" key:value pairs. If you wish for a resource to be added as both a consumer and a producer, set the \"resource_type\" to \"both\". Example: '{\"c35b44419f7b2717f25c6022d04af72a492cd892\":\"consumer\",\"b09df0ea0323073b05a1ddd9b2d44c769d8fa7c2\":\"both\"}'", metavar="RESOURCES")
         (options, args) = parser.parse_args()
         if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
