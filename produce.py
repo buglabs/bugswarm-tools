@@ -32,11 +32,8 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
     #Sleep required to allow the swarm server time to respond with header
     time.sleep(1)
 
-    #Send a blank message to open the connection
-    stripped_msg = '{"message": {"to": ["' + swarm_id + '"], "payload":}}'
-    size = hex(len(stripped_msg))[2:] + "\r\n"
-    chunk = stripped_msg + "\r\n"
-    conn.send(size+chunk)
+    #Send a blank http body to open the connection
+    conn.send('2\r\n\n\n\r\n')
 
     #Execute further messages
     if wrap == False:
