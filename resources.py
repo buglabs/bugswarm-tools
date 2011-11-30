@@ -17,7 +17,7 @@ def create(hostname, api_key, name, machine_type, description, position):
     if position != None:
         latitude = position[1]
         longitude = position[3]
-        latlon = {"latitude": int(latitude), "longitude": int(longitude)}
+        latlon = {"latitude": float(latitude), "longitude": float(longitude)}
         create_resource["position"] = latlon
     create_resource_json = json.dumps(create_resource)
     conn = httplib.HTTPConnection(hostname)
@@ -94,7 +94,7 @@ def main():
                     +"\n  *MACHINE_TYPE: The machine type of the resource to create. Valid types; 'pc', 'smartphone', 'bug'."
         parser = OptionParser(usage = opt_usage)
         parser.add_option("-d", "--description", dest="description", help="Set the resource's description", metavar="DESCRIPTION")
-        parser.add_option("-p", "--position", dest="position", help="Set the resource's position. Must be a tuple of ints surounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
+        parser.add_option("-p", "--position", dest="position", help="Set the resource's position. Must be a tuple of floats surounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
         (options, args) = parser.parse_args()
         if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
@@ -109,7 +109,7 @@ def main():
         parser.add_option("-n", "--name", dest="name", help="Set the resource's name", metavar="NAME")
         parser.add_option("-t", "--type", dest="machine_type", help="Set the resource's machine type. Valid types; 'pc', 'smartphone', 'bug'.", metavar="MACHINE_TYPE")
         parser.add_option("-d", "--description", dest="description", help="Set the resource's description", metavar="DESCRIPTION")
-        parser.add_option("-p", "--position", dest="position", help="Set the resource's position. Must be a tuple of ints surrounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
+        parser.add_option("-p", "--position", dest="position", help="Set the resource's position. Must be a tuple of floats surrounded by quotations.", metavar="\"(LATITUDE, LONGITUDE)\"")
         (options, args) = parser.parse_args()
         if len(args) != 2:
             print "Invalid number of args. See --help for correct usage."
