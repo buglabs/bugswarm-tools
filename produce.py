@@ -73,7 +73,7 @@ def main():
     elif sys.argv[1] == "produce":
         signal.signal(signal.SIGINT, signal_handler)
         opt_usage = "usage: \n  DATA | ./produce.py %s SWARM_ID RESOURCE_ID [options]"%(sys.argv[1])
-        opt_usage += "\n\n  *DATA: The data to produce in the feed. Valid forms; \"echo 'DATA'\", \"cat FILENAME\"." \
+        opt_usage += "\n\n  *DATA: The data to produce in the feed. Valid forms; \"echo 'DATA'\", \"cat FILENAME\".\n   DATA may also be passed in through stdin after running the script rather than piping in each time." \
                     +"\n  *SWARM_ID: The ID of the swarm to produce to." \
                     +"\n  *RESOURCE_ID: The ID of the resource to produce with."
         parser = OptionParser(usage = opt_usage)
