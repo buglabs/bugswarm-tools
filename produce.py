@@ -27,6 +27,7 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
     conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
+    conn.putheader("connection", "keep-alive")
     conn.endheaders()
     
     #Sleep required to allow the swarm server time to respond with header
