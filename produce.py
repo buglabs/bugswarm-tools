@@ -16,8 +16,7 @@ def usage(script_name):
 
 def signal_handler(signal, frame):
         global conn
-        conn.close()
-        print 'Http connection closed.'
+        conn.close()        
         sys.exit(0)
 
 def produce(hostname, api_key, swarm_id, resource_id, wrap):

@@ -4,13 +4,22 @@ from lib import swarmtoolscore
 import sys
 import httplib
 import os
+import signal
+
+conn = None
 
 def usage(script_name):
     print "%s [consume] \n"%(script_name)
     print "Use '%s [method] --help' for a method's usage and options."%(script_name)
     sys.exit()
 
+def signal_handler(signal, frame):
+        global conn
+        conn.close()        
+        sys.exit(0)
+
 def consume(hostname, api_key, swarm_id, resource_id):
+    global conn
     conn = httplib.HTTPConnection(hostname)
     conn.request("GET", "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
@@ -26,6 +35,7 @@ def main():
     if len(sys.argv) == 1:
         usage(sys.argv[0])
     elif sys.argv[1] == "consume":
+        signal.signal(signal.SIGINT, signal_handler)
         opt_usage = "usage: \n  %s SWARM_ID RESOURCE_ID"%(sys.argv[1])
         opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to consume." \
                     +"\n  *RESOURCE_ID: The ID of the resource to use for consumption."
