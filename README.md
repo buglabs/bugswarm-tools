@@ -14,15 +14,6 @@ cd bugswarm-tools
 ./init.py init USERNAME PASSWORD
 ```
 
-If you are running zsh, you may want to add the following function to your .zshrc, allowing you to 
-run commands like `swarm user_resources create` from anywhere, instead of `/path/to/user_resources.py create`:
-
-```javascript
-function swarm() {
-  $HOME/code/buglabs/bugswarm-tools/$1.py $*[2,$#-1]   
-}
-```
-
 ##Usage
 
 For each of the python scripts in the root of the bugswarm-tools repository, simply run `./SCRIPT_NAME` without any 
