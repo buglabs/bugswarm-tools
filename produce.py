@@ -19,7 +19,7 @@ def signal_handler(signal, frame):
         conn.close()        
         sys.exit(0)
 
-def produce(hostname, api_key, swarm_id, resource_id, wrap):
+def produce(hostname, api_key, swarm_id, resource_id, raw):
     global conn
     conn = httplib.HTTPConnection(hostname)
     sel = "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id)
@@ -36,7 +36,7 @@ def produce(hostname, api_key, swarm_id, resource_id, wrap):
     conn.send('2\r\n\n\n\r\n')
 
     #Execute further messages
-    if wrap == False:
+    if raw == True:
         while True:
             try:
                 msg = sys.stdin.readline()
@@ -72,19 +72,19 @@ def main():
         usage(sys.argv[0])
     elif sys.argv[1] == "produce":
         signal.signal(signal.SIGINT, signal_handler)
-        opt_usage = "usage: \n  DATA | ./produce.py %s SWARM_ID RESOURCE_ID [options]"%(sys.argv[1])
-        opt_usage += "\n\n  *DATA: The data to produce in the feed. Valid forms; \"echo 'DATA'\", \"cat FILENAME\".\n   DATA may also be passed in through stdin after running the script rather than piping in each time." \
-                    +"\n  *SWARM_ID: The ID of the swarm to produce to." \
-                    +"\n  *RESOURCE_ID: The ID of the resource to produce with."
+        opt_usage = "usage: \n  ./produce.py %s SWARM_ID RESOURCE_ID [options]"%(sys.argv[1])
+        opt_usage += "\n\n  *SWARM_ID: The ID of the swarm to produce to." \
+                    +"\n  *RESOURCE_ID: The ID of the resource to produce with." \
+                    +"\n\n  NOTE: Data may also be produced by piping into the function (DATA | ./produce.py produce SWARM_ID RESOURCE_ID [options])."
         parser = OptionParser(usage = opt_usage)
-        parser.add_option("-w", action="store_true", dest="wrap", help="Wrap the payload in the proper message stanza.", default=False) 
+        parser.add_option("-r", action="store_true", dest="raw", help="Require that messages be sent in the raw formatting as specified in the 'Sending Messages' section at http://developer.bugswarm.net/participation_api.html.", default=False)
         (options, args) = parser.parse_args()
         if len(args) != 3:
             print "Invalid number of args. See --help for correct usage."
             sys.exit()
         swarm_id = args[1]
         resource_id = args[2]
-        produce(server_info["hostname"], keys['participation'], swarm_id, resource_id, options.wrap)
+        produce(server_info["hostname"], keys['participation'], swarm_id, resource_id, options.raw)
     else:
         usage(sys.argv[0])
 
