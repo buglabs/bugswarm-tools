@@ -52,8 +52,10 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
     conn.send(size+chunk)
  
     #Execute further messages
+    n=0
     while True:
        try:
+           n = n + 1
            ser.write('AT*E2OTR?\r\n')      # write a string
            ser.flush()
            reading = ''
@@ -83,6 +85,13 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
            size = hex(len(msg))[2:] + "\r\n"
            chunk = msg + "\r\n"
            conn.send(size+chunk)
+           #every fifth time, send capabilities
+           if n%5 == 0:
+               stripped_payload = '{"capabilities": {"feeds": ["Temperature", "Acceleration", "Location"]}}'.strip()
+               msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+               size = hex(len(msg))[2:] + "\r\n"
+               chunk = msg + "\r\n"
+               conn.send(size+chunk)
            time.sleep(2)
        except Exception as e:
                print "some sort of problem", e
