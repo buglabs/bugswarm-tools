@@ -51,6 +51,8 @@ def set_keys(hostname, user_id, password):
         create_key(hostname, user_id, password, "participation")
         resp = get_keys_from_server(hostname, user_id, password)
     txt = resp.read()
+    print txt
+    print resp.status
     if resp.status >= 400:
         print "Something bad happened: "
         print resp.status, txt
@@ -88,7 +90,7 @@ def get_keys_from_server(hostname, user_id, password):
     conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
+    print auth_header
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
-    conn.close()
     return resp    
