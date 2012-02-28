@@ -40,7 +40,18 @@ def getResourceByName(apikey, name):
     
 class resource:
     """Represents a resource, the fundamental agent in a BUGswarm application"""
-    def __init__(self, apikey, id, name=False, description=False, created_at=False):
+
+    #Permission types 
+    PERM_NOT_SPECIFIED = -1
+    PERM_NONE = 0
+    PERM_CONSUMER = 1
+    PERM_PRODUCER = 2
+    PERM_PROSUMER = 3
+
+    TYPE_PRODUCER = "producer"
+    TYPE_CONSUMER = "consumer"
+
+    def __init__(self, apikey, id, name=False, description=False, created_at=False, permission=PERM_NOT_SPECIFIED):
         """Create a resource object
         
         @param apikey: an apikey object containing a valid configuration key
@@ -56,6 +67,10 @@ class resource:
         self.name = name
         self.description = description
         self.created_at = created_at
+        self.permission = permission
+        #if complete information was not given, try to retrieve it
+        if not (name or description or created_at):
+            self.getInfo()
         
     def getInfo(self):
         """Retrieve a resource's information from the swarm server"""
