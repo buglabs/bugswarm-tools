@@ -22,7 +22,6 @@ def signal_handler(signal, frame):
 def produce(hostname, api_key, swarm_id, resource_id, raw):
     global conn
     conn = httplib.HTTPConnection(hostname)
-    conn.debuglevel = 1
     sel = "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id)
     conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
