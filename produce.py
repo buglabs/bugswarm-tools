@@ -22,6 +22,7 @@ def signal_handler(signal, frame):
 def produce(hostname, api_key, swarm_id, resource_id, raw):
     global conn
     conn = httplib.HTTPConnection(hostname)
+    conn.debuglevel = 1
     sel = "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id)
     conn.putrequest("POST", sel)
     conn.putheader("x-bugswarmapikey", api_key)
@@ -45,7 +46,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
                 elif (len(msg) < 1):
                     break
                 else:
-                    stripped_msg = msg.strip()
+                    stripped_msg = msg.strip() + "\r\n"
                 size = hex(len(stripped_msg))[2:] + "\r\n"
                 chunk = stripped_msg + "\r\n"
                 conn.send(size+chunk)                
@@ -58,7 +59,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
                 if (len(payload) < 1):
                     break
                 stripped_payload = payload.strip()
-                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}\r\n'
                 size = hex(len(msg))[2:] + "\r\n"
                 chunk = msg + "\r\n"
                 conn.send(size+chunk)
