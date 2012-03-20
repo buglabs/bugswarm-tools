@@ -45,7 +45,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
                 elif (len(msg) < 1):
                     break
                 else:
-                    stripped_msg = msg.strip()
+                    stripped_msg = msg.strip() + "\r\n"
                 size = hex(len(stripped_msg))[2:] + "\r\n"
                 chunk = stripped_msg + "\r\n"
                 conn.send(size+chunk)                
@@ -58,7 +58,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
                 if (len(payload) < 1):
                     break
                 stripped_payload = payload.strip()
-                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+                msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}\r\n'
                 size = hex(len(msg))[2:] + "\r\n"
                 chunk = msg + "\r\n"
                 conn.send(size+chunk)

@@ -90,5 +90,4 @@ def get_keys_from_server(hostname, user_id, password):
     auth_header = "Basic " + base64.b64encode(auth_hash)
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
-    conn.close()
     return resp    
