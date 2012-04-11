@@ -50,14 +50,6 @@ def set_keys(hostname, user_id, password):
     if resp.status >= 400:
         print "Something bad happened: "
         print resp.status, resp.reason	
-		
-    if config.has_option("Keys", "configuration") == False:
-        key_obj = create_key(hostname, user_id, password, "configuration")
-        config.set("Keys", "configuration", key_obj["key"])
-    if config.has_option("Keys", "participation") == False:
-        key_obj = create_key(hostname, user_id, password, "participation")
-        config.set("Keys", "participation", key_obj["key"])
-
     with open("swarm.cfg", "wb") as configfile:
         config.write(configfile)
 
