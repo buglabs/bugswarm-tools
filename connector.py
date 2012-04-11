@@ -36,7 +36,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
   #Send a blank http body to open the connection
     conn.send('2\r\n\n\n\r\n')
     stripped_payload = '{"capabilities": {"feeds": ["Temperature", "Acceleration", "Location"]}}'.strip()
-    msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+    msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}' + '\r\n'
     size = hex(len(msg))[2:] + "\r\n"
     chunk = msg + "\r\n"
     conn.send(size+chunk)
@@ -51,27 +51,27 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
            if (len(payload) < 1):
                 break
            stripped_payload = payload.rstrip('\n')
-           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}' + '\r\n'
            size = hex(len(msg))[2:] + "\r\n"
            chunk = msg + "\r\n"
            conn.send(size+chunk)
 	   payload ='{"name":"Acceleration", "feed":{"x":'+str(random.random())+', "y": '+str(random.random())+', "z": '+str(random.random())+'}}'
            stripped_payload = payload.rstrip('\n')
-           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}' + '\r\n'
            size = hex(len(msg))[2:] + "\r\n"
            chunk = msg + "\r\n"
            conn.send(size+chunk)
            payload = '{"name":"Location", "feed":{"latitude": "40.724'+str(random.randint(10,99))+'","longitude": "-73.9965'+str(random.randint(10,99))+'"}}'
 	   print payload
            stripped_payload = payload.rstrip('\n')
-           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+           msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}' + '\r\n'
            size = hex(len(msg))[2:] + "\r\n"
            chunk = msg + "\r\n"
            conn.send(size+chunk)
            #every fifth time, send capabilities
            if n%5 == 0:
                stripped_payload = '{"capabilities": {"feeds": ["Temperature", "Acceleration", "Location"]}}'.strip()
-               msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}'
+               msg = '{"message": {"to": ["' + swarm_id + '"], "payload": ' + stripped_payload + '}}' + '\r\n'
                size = hex(len(msg))[2:] + "\r\n"
                chunk = msg + "\r\n"
                conn.send(size+chunk)
@@ -105,3 +105,5 @@ def main():
         usage(sys.argv[0])
 
 main()
+
+
