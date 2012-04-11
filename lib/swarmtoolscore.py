@@ -47,19 +47,10 @@ def set_keys(hostname, user_id, password):
     resp = get_keys_from_server(hostname, user_id, password)
     if resp.status == 404:
         print "Status is 404"
-        create_key(hostname, user_id, password, "configuration")
-        create_key(hostname, user_id, password, "participation")
-        resp = get_keys_from_server(hostname, user_id, password)
-    txt = resp.read()
     if resp.status >= 400:
         print "Something bad happened: "
-        print resp.status, txt
-    json_obj = json.loads(txt)
-    for key_obj in json_obj:
-        key_type = key_obj["type"]
-        key_value = key_obj["key"]
-        config.set("Keys", key_type, key_value)
-
+        print resp.status, resp.reason	
+		
     if config.has_option("Keys", "configuration") == False:
         key_obj = create_key(hostname, user_id, password, "configuration")
         config.set("Keys", "configuration", key_obj["key"])
@@ -76,8 +67,6 @@ def create_key(hostname, user_id, password, key_type):
     auth_header = "Basic " + base64.b64encode(auth_hash)
     if (key_type != None):
         conn.request("POST", "/keys/" + key_type, None, {"Authorization":auth_header})
-    else:
-        conn.request("POST", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()

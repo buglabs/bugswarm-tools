@@ -6,18 +6,8 @@ import httplib
 import os
 import time
 import signal
-import serial
 import random
-ser = serial.Serial('/dev/ttyACM0')  # open first serial port
-print ser.portstr       # check which port was really used
-ser.flush()
-ser.write('AT*E2OTR?\r\n')      # write a string
-ser.flush()
-reading = ser.readline()
-reading = ser.readline()
-readings = reading.split(',')
-temp = readings[len(readings)-1]
-print temp
+
 conn = None;
 
 def usage(script_name):
@@ -56,14 +46,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
     while True:
        try:
            n = n + 1
-           ser.write('AT*E2OTR?\r\n')      # write a string
-           ser.flush()
-           reading = ''
-           while (not ',' in reading):
-               reading = ser.readline()
-           readings = reading.split(',')
-           temp = readings[len(readings)-1].rstrip('\r\n')
-           payload = '{"name":"Temperature", "feed":{"Temperature" : "'+temp+'"}}'
+	   payload = '{"name":"Temperature", "feed":{"Temperature" : "'+str(random.random()*50)+'"}}'
            print payload
            if (len(payload) < 1):
                 break
@@ -92,6 +75,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
                size = hex(len(msg))[2:] + "\r\n"
                chunk = msg + "\r\n"
                conn.send(size+chunk)
+               print "sent capabilities " + msg
            time.sleep(2)
        except Exception as e:
                print "some sort of problem", e

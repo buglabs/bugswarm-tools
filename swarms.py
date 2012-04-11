@@ -37,6 +37,7 @@ def create(hostname, api_key, name, description, public, resources):
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
+    print txt
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def update(hostname, api_key, swarm_id, name, description, public):
@@ -76,6 +77,7 @@ def list_swarms(hostname, api_key):
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
+    print txt
     print json.dumps(json.loads(txt), sort_keys=True, indent=4)
 
 def get_info(hostname, api_key, swarm_id):
