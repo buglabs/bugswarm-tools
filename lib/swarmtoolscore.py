@@ -44,14 +44,12 @@ def set_user_info(user_id):
 def set_keys(hostname, user_id, password):
     config = ConfigParser.ConfigParser()
     config.read("%s/swarm.cfg"%(my_working_directory))
-    resp = get_keys_from_server(hostname, user_id, password)
+    resp = get_keys_from_server(hostname, user_id, password, config)
     if resp.status == 404:
         print "Status is 404"
     if resp.status >= 400:
         print "Something bad happened: "
-        print resp.status, resp.reason	
-    with open("swarm.cfg", "wb") as configfile:
-        config.write(configfile)
+        print resp.status, resp.reason
 
 def create_key(hostname, user_id, password, key_type):
     conn = httplib.HTTPConnection(hostname)
@@ -65,10 +63,17 @@ def create_key(hostname, user_id, password, key_type):
     json_obj = json.loads(txt)
     return json_obj
 
-def get_keys_from_server(hostname, user_id, password):
+def get_keys_from_server(hostname, user_id, password, config):
     conn = httplib.HTTPConnection(hostname)
     auth_hash = user_id + ":" + password
     auth_header = "Basic " + base64.b64encode(auth_hash)
     conn.request("GET", "/keys", None, {"Authorization":auth_header})
     resp = conn.getresponse()
+    txt = resp.read()
+    keys = json.loads(txt)
+    for key in keys:
+        config.set("Keys", key["type"], key["key"])
+    
+    with open("swarm.cfg", "wb") as configfile:
+        config.write(configfile)
     return resp    
