@@ -1,7 +1,7 @@
 import httplib
 import json
 import logging
-from resource import resource
+import resource
 
 """Implements Swarm object and helper functions"""
 def getSwarms(apikey):
@@ -15,7 +15,10 @@ def getSwarms(apikey):
     resp = conn.getresponse()
     txt = resp.read()
     conn.close()
-    logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
+    if resp.status >= 400:
+        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
+    else:
+        logging.warning('Swarm info response: ('+str(resp.status)+'): '+txt)
     items = json.loads(txt)
     swarms = []
     for item in items:
@@ -109,10 +112,10 @@ class swarm:
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
         if (resp.status >= 400):
             logging.error('Unable to create new swarm '+name)
             return None
+        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
         item = json.loads(txt)
         ret = cls(apikey, item["id"],
                 item["name"] if item.has_key("name") else False,
@@ -127,7 +130,10 @@ class swarm:
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
+        if resp.status >= 400:
+            logging.warning('Swarm info response: ('+str(resp.status)+'): '+txt)
+        else:
+            logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
         item = json.loads(txt)
         if (item.has_key("name")):
             self.name = item["name"]
@@ -186,9 +192,10 @@ class swarm:
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
         if resp.status >= 400:
+            logging.warning('Swarm info response: ('+str(resp.status)+'): '+txt)
             return False
+        logging.debug('Swarm info response: ('+str(resp.status)+'): '+txt)
         if name != None:
             self.name = name
         if description != None:
@@ -209,26 +216,28 @@ class swarm:
             add_resource["resource_type"] = resource.TYPE_CONSUMER
         add_resource_json = json.dumps(add_resource)
         conn = httplib.HTTPConnection(self.apikey.server)
-        conn.request("PUT", "/swarms/%s/resources"%(self.id), add_swarm_json,
+        conn.request("PUT", "/swarms/%s/resources"%(self.id), add_resource_json,
                      {"x-bugswarmapikey":self.apikey.configuration})
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
         if txt != "Created":
+            logging.warning('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
             return False
+        logging.debug('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
         if resource.permission == resource.PERM_PROSUMER:
             add_resource["resource_type"] = resource.TYPE_CONSUMER
             add_resource_json = json.dumps(add_resource)
             conn = httplib.HTTPConnection(self.apikey.server)
-            conn.request("PUT", "/swarms/%s/resources"%(self.id), add_swarm_json,
+            conn.request("PUT", "/swarms/%s/resources"%(self.id), add_resource_json,
                          {"x-bugswarmapikey":self.apikey.configuration})
             resp = conn.getresponse()
             txt = resp.read()
             conn.close()
-            logging.debug('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
             if txt != "Created":
+                logging.warning('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
                 return False
+            logging.debug('Swarm add_resource response: ('+str(resp.status)+'): '+txt)
         self.getInfo()
         return True
 
@@ -249,7 +258,10 @@ class swarm:
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm get_resource response: ('+str(resp.status)+'): '+txt)
+        if resp.status >= 400:
+            logging.warning('Swarm get_resource response: ('+str(resp.status)+'): '+txt)
+        else:
+            logging.debug('Swarm get_resource response: ('+str(resp.status)+'): '+txt)
         res_list = {}
         item = json.loads(txt)
         for res_data in item:
@@ -276,14 +288,48 @@ class swarm:
                 res_list[res_data["resource_id"]].permission = res_list[res_data["resource_id"]].permission | permission
         return res_list
 
-    def removeResource(self, resource, type):
+    def removeResource(self, resource):
         """Add a resource from the
 
         @param resource: a resource object
-        @param type: the type of resource EG
-                     TYPE_PRODUCER
-                     TYPE_CONSUMER
         """
+        delete_resource = {"resource_id": resource.id}
+        if resource.permission == resource.PERM_PRODUCER or resource.permission == resource.PERM_PROSUMER:
+            delete_resource["resource_type"] = resource.TYPE_PRODUCER
+        elif resource.permission == resource.PERM_CONSUMER:
+            delete_resource["resource_type"] = resource.TYPE_CONSUMER
+        delete_resource_json = json.dumps(delete_resource)
+        conn = httplib.HTTPConnection(self.apikey.server)
+        conn.request("DELETE", "/swarms/%s/resources"%(self.id), delete_resource_json,
+                     {"x-bugswarmapikey":self.apikey.configuration})
+        resp = conn.getresponse()
+        txt = resp.read()
+        conn.close()
+        if resp.status >= 400:
+            logging.warning('Swarm delete_resource response: ('+str(resp.status)+'): '+txt)
+        else:
+            logging.debug('Swarm delete_resource response: ('+str(resp.status)+'): '+txt)
+        if txt != "":
+            return False
+        if resource.permission == resource.PERM_PROSUMER:
+            delete_resource["resource_type"] = resource.TYPE_CONSUMER
+            delete_resource_json = json.dumps(add_resource)
+            conn = httplib.HTTPConnection(self.apikey.server)
+            conn.request("DELETE", "/swarms/%s/resources"%(self.id),
+                    delete_resource_json,
+                    {"x-bugswarmapikey":self.apikey.configuration})
+            resp = conn.getresponse()
+            txt = resp.read()
+            conn.close()
+            if resp.status >= 400:
+                logging.warning('Swarm delete_resource response: ('+str(resp.status)+'): '+txt)
+            else:
+                logging.debug('Swarm delete_resource response: ('+str(resp.status)+'): '+txt)
+            if txt != "":
+                return False
+        self.getInfo()
+        return True
+
     def destroy(self):
         """Remove this swarm from BUGswarm"""
         conn = httplib.HTTPConnection(self.apikey.server)
@@ -292,8 +338,9 @@ class swarm:
         resp = conn.getresponse()
         txt = resp.read()
         conn.close()
-        logging.debug('Swarm destroy response: ('+str(resp.status)+')')
         if resp.status == 204:
+            logging.debug('Swarm destroy response: ('+str(resp.status)+')')
             return True
         else:
+            logging.warning('Swarm destroy response: ('+str(resp.status)+')')
             return False
