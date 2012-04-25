@@ -38,7 +38,7 @@ def getSwarms(apikey):
                         permission = resource.PERM_PROSUMER
                 #If item is not already in the resources map, add it
                 if not resources.has_key(res_data["resource_id"]):
-                    resources[res_data["resource_id"]] = resource(apikey, res_data["resource_id"],
+                    resources[res_data["resource_id"]] = resource.resource(apikey, res_data["resource_id"],
                         res_data["name"] if res_data.has_key("name") else False,
                         res_data["description"] if res_data.has_key("description") else False,
                         res_data["created_at"] if res_data.has_key("created_at") else False,
@@ -160,7 +160,7 @@ class swarm:
                         permission = resource.PERM_PROSUMER
                 #If item is not already in the resources map, add it
                 if not self.resources.has_key(res_data["resource_id"]):
-                    self.resources[res_data["resource_id"]] = resource(self.apikey, res_data["resource_id"],
+                    self.resources[res_data["resource_id"]] = resource.resource(self.apikey, res_data["resource_id"],
                         res_data["name"] if res_data.has_key("name") else False,
                         res_data["description"] if res_data.has_key("description") else False,
                         res_data["created_at"] if res_data.has_key("created_at") else False,
@@ -278,7 +278,7 @@ class swarm:
                     permission = resource.PERM_PROSUMER
             #If item is not already in the resources map, add it
             if not res_list.has_key(res_data["resource_id"]):
-                res_list[res_data["resource_id"]] = resource(self.apikey, res_data["resource_id"],
+                res_list[res_data["resource_id"]] = resource.resource(self.apikey, res_data["resource_id"],
                     res_data["name"] if res_data.has_key("name") else False,
                     res_data["description"] if res_data.has_key("description") else False,
                     res_data["created_at"] if res_data.has_key("created_at") else False,
