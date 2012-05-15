@@ -1,7 +1,7 @@
 #!/usr/bin/python
-from lib import apikey
-from lib import resource
-from lib import swarm
+from BUGswarm import apikey
+from BUGswarm import resource
+from BUGswarm import swarm
 import logging
 import unittest
 
