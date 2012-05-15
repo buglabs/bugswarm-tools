@@ -3,13 +3,14 @@ from BUGswarm import apikey
 from BUGswarm import resource
 from BUGswarm import participation
 import logging
+import time
 
 logging.basicConfig(level=logging.INFO)
 api = apikey.apikey("demo","buglabs55")
 res = resource.getResourceByName(api,"Renesas01")
 swarms = res.getSwarms()
 
-print "Press enter to quit"
+print "Press Control-C to quit\r\n"
 
 def presence(obj):
     print "presence from "+obj['from']['resource']
@@ -20,9 +21,10 @@ def error(obj):
 
 pt = participation.participationThread(api,res, swarms,
         onPresence=presence, onMessage=message, onError=error)
-
 try:
-    raw_input("")
+    while(True):
+        pt.produce('{"data":"Hello world!"}')
+        time.sleep(2)
 except KeyboardInterrupt:
     pass
 pt.stop()

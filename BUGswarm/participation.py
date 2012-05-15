@@ -86,6 +86,16 @@ class participationThread(threading.Thread):
         self.running = False
         self.join()
 
+    def produce(self, msg, dest_swarm=False):
+        if not dest_swarm:
+            dest_swarm = self.swarms[0]
+        stripped_payload = msg.strip()
+        msg = '{"message":{"to":["'+dest_swarm.id+\
+            '"],"payload":' + stripped_payload + '}}\r\n'
+        size = hex(len(msg))[2:] + "\r\n"
+        chunk = msg + "\r\n"
+        self.sock.sendall(size+chunk)
+
     def parse(self, txt):
         if len(txt) < 6 or txt[0] != '{':
             #disregard if too small for json
