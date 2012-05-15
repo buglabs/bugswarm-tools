@@ -9,6 +9,8 @@ def getResources(apikey):
     """Retrieve a list of all resources associated with an api key
 
     @param apikey: an apikey object containing a valid configuration key
+
+    @return: returns a list of all resource objects owned by the user.
     """
     conn = httplib.HTTPConnection(apikey.server)
     conn.request("GET", "/resources", None, {"x-bugswarmapikey":apikey.configuration})
@@ -35,6 +37,7 @@ def getResourceByName(apikey, name):
     @param apikey: an apikey object containing a valid configuration key
     @param name: A short name for the resource
 
+    @return: returns a resource object if found, None otherwise.
     """
     resources = getResources(apikey)
     for res in resources:
@@ -58,12 +61,12 @@ class resource:
     def __init__(self, apikey, id, name=False, description=False, created_at=False, permission=PERM_NOT_SPECIFIED):
         """Create a resource object
 
+        name and description are optional and can be retrieved by getInfo()
+
         @param apikey: an apikey object containing a valid configuration key
         @param id: the 40 character ID string of the resource
         @param name: A short name for the resource
         @param description: A longer description
-
-        name and description are optional and can be retrieved by getInfo()
         """
 
         self.apikey = apikey
@@ -105,7 +108,7 @@ class resource:
         @param name: A short name for the resource
         @param description: A longer description
 
-        Returns a new resource object
+        @return: Returns a new resource object
         """
         create_resource = {"name": name, "machine_type":"pc"}
         if description != None:
@@ -132,6 +135,8 @@ class resource:
 
         @param name: A short name for the resource
         @param description: A longer description
+
+        @return: returns True if successful, False otherwise.
         """
         update_resource = {}
         if name != None:
@@ -156,7 +161,10 @@ class resource:
         return True
 
     def getSwarms(self):
-        """Return a list of all swarms in which this resource can participate"""
+        """Return a list of all swarms in which this resource can participate
+
+        @return: returns a list of swarm objects.
+        """
         conn = httplib.HTTPConnection(self.apikey.server)
         conn.request("GET", "/resources/%s/swarms"%(self.id), None,
                      {"x-bugswarmapikey":self.apikey.configuration})
@@ -204,7 +212,10 @@ class resource:
         return swarms
 
     def destroy(self):
-        """Remove this resource from BUGswarm"""
+        """Remove this resource from BUGswarm
+
+        @return: returns True if successful, False otherwise.
+        """
         conn = httplib.HTTPConnection(self.apikey.server)
         conn.request("DELETE", "/resources/%s"%(self.id), None,
                      {"x-bugswarmapikey":self.apikey.configuration})

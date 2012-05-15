@@ -8,6 +8,8 @@ def getSwarms(apikey):
     """Retrieve a list of all swarms associated with this api key
 
     @param apikey: an apikey object containing a valid configuration key
+
+    @return: Returns a list containing all swarm objects owned by the user
     """
     conn = httplib.HTTPConnection(apikey.server)
     conn.request("GET", "/swarms", None,
@@ -55,6 +57,20 @@ def getSwarms(apikey):
         swarms.append(swrm)
     return swarms
 
+def getSwarmByName(apikey, name):
+    """Returns a swarm object with a given name
+
+    @param apikey: an apikey object containing a valid configuration key
+    @param name: A short name for the resource
+
+    @return: returns a swarm object if found, None otherwise.
+    """
+    swarms = getResources(apikey)
+    for swrm in swarms:
+        if (swrm.name == name):
+            return swrm
+    return None
+
 class swarm:
     """Represents a Swarm - a collection of linked resources"""
 
@@ -63,8 +79,16 @@ class swarm:
         """Initialize an existing resource and retrieve it's info
 
         @param apikey: an apikey object containing a valid configuration key
-        @param id: if specified, this will retrieve resource details from swarm
-                   otherwise, resource can be created using .create()
+        @param id: the id of the swarm object.  If unknown, use the create
+            classmethod
+        @param name: (optional) A text name for the swarm
+        @param description: (optional) A text description for the swarm
+        @param created_at: (optional) The date and time of object creation, eg
+            "2011-08-29T20:17:08.676Z"
+        @param public: (optional) Whether or not this is a public swarm, boolean
+            (default: False)
+        @param resources: (optional) A list of resource objects  that are a
+            member of this swarm.
         """
         self.apikey = apikey
         self.id = id
@@ -84,10 +108,9 @@ class swarm:
         @param name: A short name for the swarm
         @param description: A longer description
         @param public: Boolean
-        @param resources: An optional list of resource objects
+        @param resources: An optional dict of resource objects, keyed by id
 
-        returns a swarm object
-
+        @return: returns a new swarm object
         """
         res_list = []
         for res in resources:
@@ -173,10 +196,11 @@ class swarm:
     def update(self, name, description, public):
         """Update the swarm information, informing the server of changes
 
-        @param name: A short name for the swarm
-        @param description: A longer description
-        @param public: Boolean
+        @param name: (optional) A short name for the swarm
+        @param description: (optional) A longer description
+        @param public: (optional) Boolean
 
+        @return: True if success, False otherwise.
         """
         update_swarm = {}
         if name != None:
@@ -207,7 +231,11 @@ class swarm:
     def addResource(self, resource):
         """Add a resource to the swarm
 
+        Make sure to specify the .permission var of the resource before adding.
+
         @param resource: a resource object
+
+        @return: True if success, False otherwise.
         """
         add_resource = {"resource_id": resource.id}
         if resource.permission == resource.PERM_PRODUCER or resource.permission == resource.PERM_PROSUMER:
@@ -247,6 +275,8 @@ class swarm:
         @param resource_type: (optional) only return resources of a given type, EG
                      TYPE_PRODUCER
                      TYPE_CONSUMER
+
+        @return: returns a dict of resources, indexed by resource_id
         """
         conn = httplib.HTTPConnection(self.apikey.server)
         if resource_type != None:
@@ -292,6 +322,8 @@ class swarm:
         """Add a resource from the
 
         @param resource: a resource object
+
+        @return: returns True if successful, False otherwise.
         """
         delete_resource = {"resource_id": resource.id}
         if resource.permission == resource.PERM_PRODUCER or resource.permission == resource.PERM_PROSUMER:
@@ -331,7 +363,10 @@ class swarm:
         return True
 
     def destroy(self):
-        """Remove this swarm from BUGswarm"""
+        """Remove this swarm from BUGswarm
+
+        @return: returns True if successful, False otherwise.
+        """
         conn = httplib.HTTPConnection(self.apikey.server)
         conn.request("DELETE", "/swarms/%s"%(self.id), None,
                      {"x-bugswarmapikey":self.apikey.configuration})
