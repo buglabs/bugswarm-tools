@@ -46,7 +46,7 @@ def produce(hostname, api_key, swarm_id, resource_id, raw):
     while True:
        try:
            n = n + 1
-	   payload = '{"name":"Temperature", "feed":{"Temperature" : "'+str(random.random()*50)+'"}}'
+	   payload = '{"name":"Temperature", "feed":{"Temperature" : "'+str(random.randrange(20.0,25.0))+'"}}' 
            print payload
            if (len(payload) < 1):
                 break
