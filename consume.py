@@ -20,7 +20,7 @@ def signal_handler(signal, frame):
 
 def consume(hostname, api_key, swarm_id, resource_id):
     global conn
-    conn = httplib.HTTPConnection(hostname)
+    conn = httplib.HTTPConnection(hostname, 8007)
     conn.request("GET", "/stream?swarm_id=%s&resource_id=%s"%(swarm_id, resource_id), None, {"x-bugswarmapikey":api_key})
     resp = conn.getresponse()
     while(1):
