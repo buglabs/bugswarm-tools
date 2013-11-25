@@ -41,7 +41,7 @@ def main():
         if len(args) == 4:
             init(user_id, password, args[3])
         else:
-            init(user_id, password, "api.bugswarm.net")
+            init(user_id, password, "api.bugswarm.com")
     else:
         usage(sys.argv[0])
 
